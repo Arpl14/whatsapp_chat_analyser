@@ -6,7 +6,8 @@ from urlextract import URLExtract
 import matplotlib.pyplot as plt 
 from io import BytesIO
 import re
-
+from textblob import TextBlob
+import numpy as np
 
 
 
@@ -104,6 +105,32 @@ def message_frequency_by_month(df):
 
     # Return the message frequency data and top 5 peaks
     return message_frequency_by_month_year, top_5_peaks
+
+
+
+# Existing functions here...
+
+# Function to calculate sentiment of a message
+def get_sentiment(text):
+    # Check if text is a string (non-null)
+    if isinstance(text, str):
+        analysis = TextBlob(text)
+        return analysis.sentiment.polarity
+    return 0  # Return 0 sentiment for non-string entries (such as NaN)
+
+# Function to calculate group sentiment over time
+def group_sentiment(df):
+    df['sentiment'] = df['Message'].apply(get_sentiment)
+    sentiment_by_date = df.groupby('Only date')['sentiment'].mean()
+    
+    return sentiment_by_date
+
+# Function to calculate individual sentiment by user
+def sentiment_by_user(df):
+    df['sentiment'] = df['Message'].apply(get_sentiment)
+    sentiment_by_user = df[df['User'] != 'Group Notification'].groupby('User')['sentiment'].mean()
+    
+    return sentiment_by_user
 
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
