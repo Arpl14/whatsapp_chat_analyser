@@ -32,9 +32,15 @@ def createwordcloud(selected_user, df):
     if selected_user != 'Overall':
         df = df[df['User'] == selected_user]
 
+    # List of words/phrases to exclude from the word cloud
+    exclude_words = ['omitted', 'image omitted', 'sticker omitted', 'gif omitted', 'image', 'sticker']
+
+    # Filter out the excluded words
+    filtered_messages = df['Message'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in exclude_words]))
+
     # Generate the Word Cloud
     wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
-    df_wc = wc.generate(df['Message'].str.cat(sep=" "))
+    df_wc = wc.generate(filtered_messages.str.cat(sep=" "))
 
     # Save the word cloud image to a BytesIO object
     img_buf = BytesIO()
