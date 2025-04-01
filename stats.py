@@ -243,10 +243,10 @@ def user_segmentation(df):
 
 
 
-# Function to generate a network graph for the group
+# Function to generate a directed network graph for the group
 def network_analysis(df):
-    # Create an undirected graph
-    G = nx.Graph()
+    # Create a directed graph
+    G = nx.DiGraph()
 
     # Filter out 'Group Notification' users
     filtered_df = df[df['User'] != 'Group Notification']
@@ -267,20 +267,20 @@ def network_analysis(df):
     plt.figure(figsize=(14, 14))
 
     # Get the number of responses per user (for node color gradient)
-    user_response_count = {user: G.degree(user) for user in G.nodes}
+    user_response_count = {user: G.out_degree(user) for user in G.nodes}
 
-    # Get the edge weight for adjusting edge color intensity
+    # Get the edge weight for adjusting arrow thickness
     edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
 
-    # Get the color gradient based on user responses (more active users have darker colors)
+    # Get the color gradient based on user responses
     node_color = [user_response_count[user] for user in G.nodes]
-    node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
+    node_size = [500 + 200 * user_response_count[user] for user in G.nodes]  # Size of the node based on number of responses
 
-    # Draw the graph with custom settings (without legend)
-    node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
-                           cmap='coolwarm', font_size=12, font_weight='bold',  # Use 'coolwarm' color palette
-                           edge_color=edge_weights, width=3, edge_cmap='coolwarm',  # Arrow edges colored using 'coolwarm'
-                           alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))  # Color intensity based on edge weights
+    # Draw the graph with custom settings
+    nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
+            cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
+            edge_color=edge_weights, width=4, edge_cmap=plt.cm.plasma, arrows=True, 
+            arrowsize=15, alpha=0.7)
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
@@ -294,7 +294,6 @@ def max_responses_user(df):
     most_active_user = user_response_count.idxmax()
     most_active_user_responses = user_response_count.max()
     return most_active_user, most_active_user_responses
-# # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
 #         df = df[df['User'] == selecteduser]
