@@ -168,7 +168,7 @@ def generate_wordcloud(topic_idx, topic, vectorizer):
     topic_words = [vectorizer.get_feature_names_out()[i] for i in topic.argsort()[:-10 - 1:-1]]
     
     # Define a list of patterns to omit (words containing these substrings)
-    omit_patterns = ['image', 'gif', 'sticker', 'video']
+    omit_patterns = ['image', 'gif', 'sticker', 'video','omitted', 'deleted']
     
     # Remove words that contain the omit patterns
     topic_words = [word for word in topic_words if not any(pattern in word.lower() for pattern in omit_patterns)]
