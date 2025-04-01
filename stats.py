@@ -303,7 +303,6 @@ def user_segmentation(df):
 
 
 
-
 # Function to generate the network analysis
 def network_analysis(df, selected_user):
     # Check if the selected user is 'Overall'
