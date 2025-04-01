@@ -17,15 +17,24 @@ def fetchstats(selected_user, df):
         # Group by User and count messages
         user_engagement = df['User'].value_counts()
 
+        # Remove 'Group Notification' from the group stats and user engagement bar chart
+        user_engagement = user_engagement[user_engagement.index != 'Group Notification']
+
         # Most active user
         most_active_user = user_engagement.idxmax()
         most_active_user_messages = user_engagement.max()
+
+        # Total messages and links for the entire group
+        total_messages = df.shape[0]
+        total_links = sum(df['Message'].apply(lambda x: len(extract.find_urls(x))))
 
         # Return group-level stats
         group_stats = {
             "user_engagement": user_engagement,
             "most_active_user": most_active_user,
-            "most_active_user_messages": most_active_user_messages
+            "most_active_user_messages": most_active_user_messages,
+            "total_messages": total_messages,
+            "total_links": total_links
         }
         
         return group_stats
