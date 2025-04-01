@@ -3,7 +3,6 @@ import preprocess
 import stats
 import matplotlib.pyplot as plt
 
-
 # Title for the Streamlit app
 st.sidebar.title("WhatsApp Chat Analyzer")
 
@@ -19,8 +18,8 @@ if uploaded_file is not None:
     # Preprocess the uploaded WhatsApp chat data
     df = preprocess.preprocess(data)
 
-    # # Display the first few rows of the processed DataFrame
-    # st.dataframe(df.head())
+    # Display the first few rows of the processed DataFrame
+    st.dataframe(df.head())
 
     # Get unique users excluding 'Group Notification'
     user_list = df['User'].unique().tolist()
@@ -35,7 +34,7 @@ if uploaded_file is not None:
 
     # Show group-level statistics (if 'Overall' is selected)
     if selected_user == 'Overall':
-        st.title("WhatsApp Group Engagement Analysis")
+        st.title("Group Sentiment Analysis")
 
         st.write(f"Most active user: {group_stats['most_active_user']} with {group_stats['most_active_user_messages']} messages")
         st.write(f"Total messages in the group: {group_stats['total_messages']}")
@@ -54,66 +53,63 @@ if uploaded_file is not None:
         st.write(f"Total number of words: {individual_stats['num_words']}")
         st.write(f"Links shared: {individual_stats['links']}")
 
-
-    # Word Cloud
+    # Word Cloud for the selected user
     st.title("Word Cloud")
     wc_img = stats.createwordcloud(selected_user, df)
-    # Display the Word Cloud image in Streamlit
     st.image(wc_img, caption='Word Cloud for Messages', use_column_width=True)
 
-
-    
     # Message Frequency by Month-Year
     st.title("Message Frequency by Month-Year")
     message_freq_data, top_5_peaks = stats.message_frequency_by_month(df)
+
     # Plot the message frequency by Month-Year
     fig, ax = plt.subplots(figsize=(10, 6))
     message_freq_data.plot(kind='line', ax=ax, title='Message Frequency by Month-Year')
+
     # Add labels for the top 5 peaks
     for peak in top_5_peaks.index:
         ax.text(peak, top_5_peaks[peak], str(top_5_peaks[peak]), ha='center', color='red', fontweight='bold')
+
     # Customizing the plot
     ax.set_xlabel('Month-Year')
     ax.set_ylabel('Message Count')
     plt.xticks(rotation=45)
     plt.tight_layout()
+
     # Display the plot in Streamlit
     st.pyplot(fig)
 
+    # Sentiment Analysis: Group Sentiment Over Time
+    st.title("Group Sentiment Analysis")
 
-
-    # Overall Group Sentiment
-    st.title("Group Sentiment Over Time")
+    # Sentiment by date (group sentiment over time)
     sentiment_by_date = stats.group_sentiment(df)
 
+    # Group Sentiment Over Time Plot
     fig, ax = plt.subplots(figsize=(10, 6))
     sentiment_by_date.plot(kind='line', ax=ax, title='Group Sentiment Over Time')
     ax.set_xlabel('Date')
     ax.set_ylabel('Sentiment')
     plt.xticks(rotation=45)
-    st.pyplot(fig)
 
-    # Individual Sentiment by User
-    st.title("Sentiment by User")
+    # Sentiment by User (bar chart)
     sentiment_by_user = stats.sentiment_by_user(df)
 
-    # Create a color map based on sentiment values
-    colors = plt.cm.get_cmap('RdYlGn')  # Red-Yellow-Green color map
+    # Sentiment by User Horizontal Bar Plot
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
+    sentiment_by_user.plot(kind='barh', color='skyblue', ax=ax2, title='Sentiment by User')
+    ax2.set_xlabel('Average Sentiment')
+    ax2.set_ylabel('User')
 
-    # Normalize sentiment values to range from 0 to 1 for color mapping
-    norm = plt.Normalize(sentiment_by_user.min(), sentiment_by_user.max())
+    # Arrange the plots side by side
+    col1, col2 = st.beta_columns(2)
 
-    # Plot sentiment by user with color gradient
-    fig, ax = plt.subplots(figsize=(10, 6))
-    bars = sentiment_by_user.plot(kind='bar', color=colors(norm(sentiment_by_user)), ax=ax, title='Sentiment by User')
+    with col1:
+        st.pyplot(fig)
 
-    # Adding labels
-    ax.set_xlabel('User')
-    ax.set_ylabel('Average Sentiment')
-    plt.xticks(rotation=45)
+    with col2:
+        st.pyplot(fig2)
 
-    # Display the plot in Streamlit
-    st.pyplot(fig)
 
     # # Most Common Words
     # st.title("Most Common Words")
