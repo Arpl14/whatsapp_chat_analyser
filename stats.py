@@ -270,17 +270,40 @@ def network_analysis(df):
     user_response_count = {user: G.degree(user) for user in G.nodes}
 
     # Get the edge weight for adjusting edge color intensity
-    edge_weights = np.array([G[u][v]['weight'] for u, v in G.edges()])  # Ensure edge_weights is a numeric array
+    edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
 
     # Get the color gradient based on user responses (more active users have darker colors)
     node_color = [user_response_count[user] for user in G.nodes]
     node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
-    # Draw the graph with custom settings (without legend)
+    # Draw the graph with custom settings
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
-                           cmap='coolwarm', font_size=12, font_weight='bold',  # Use 'coolwarm' color palette
-                           edge_color=edge_weights, width=3, edge_cmap='coolwarm',  # Arrow edges colored using 'coolwarm'
-                           alpha=0.7, edge_vmin=0, edge_vmax=np.max(edge_weights))  # Color intensity based on edge weights
+                           cmap=plt.cm.YlOrRd, font_size=12, font_weight='bold', 
+                           edge_color=edge_weights, width=2, edge_cmap=plt.cm.Blues, 
+                           alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
+
+    # Normalize the node color scale for colorbar
+    norm = mcolors.Normalize(vmin=min(node_color), vmax=max(node_color))
+    sm_node = plt.cm.ScalarMappable(cmap=plt.cm.YlOrRd, norm=norm)
+    sm_node.set_array([])  # Empty array for the colorbar
+
+    # Add a color bar for the nodes
+    cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
+
+    # Add a custom legend for user activity
+    legend_elements = [
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='lightgray', markersize=10, label='Less Active User')
+    ]
+    plt.legend(handles=legend_elements, loc='upper right')
+
+    # Normalize edge color range
+    norm_edge = mcolors.Normalize(vmin=min(edge_weights), vmax=max(edge_weights))
+    sm_edge = plt.cm.ScalarMappable(cmap=plt.cm.Blues, norm=norm_edge)
+    sm_edge.set_array([])
+
+    # Add a color bar for the edges
+    plt.colorbar(sm_edge, ax=plt.gca(), label='Edge Response Frequency')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
