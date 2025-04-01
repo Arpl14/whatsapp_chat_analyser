@@ -108,6 +108,27 @@ if uploaded_file is not None:
         st.pyplot(fig2)
 
 
+    # Topic Modeling and Word Clouds
+    st.title("Topic Modeling and Word Clouds")
+
+    # Generate word clouds for the top topics (up to 4 topics)
+    wordclouds = stats.generate_topics_and_wordclouds(df, num_topics=4)
+
+    # Arrange the word clouds side by side
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.image(wordclouds[0], caption="Topic 1")
+
+    with col2:
+        st.image(wordclouds[1], caption="Topic 2")
+
+    with col3:
+        st.image(wordclouds[2], caption="Topic 3")
+
+    with col4:
+        st.image(wordclouds[3], caption="Topic 4")
+
     # # Most Common Words
     # st.title("Most Common Words")
     # common_words = stats.getcommonwords(selected_user, df)
