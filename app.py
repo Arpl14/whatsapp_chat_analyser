@@ -148,14 +148,10 @@ if uploaded_file is not None:
 
 
 
-
-
- # Display network analysis graph only for the 'Overall' user
-    if selected_user == 'Overall':
-        st.title("User Interaction Network")
-        # Generate network graph for group
-        network_fig = stats.network_analysis(df)
-        st.pyplot(network_fig)
+if selected_user == 'Overall':
+    # Generate network graph for group
+    network_fig = stats.network_analysis(df)
+    st.pyplot(network_fig)
 
         # Display the user with the maximum responses
         most_active_user, most_active_user_responses = stats.max_responses_user(df)
