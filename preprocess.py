@@ -1,8 +1,8 @@
-
 import pandas as pd
 import re
 from datetime import datetime
 
+# Function to get time and date in the desired format
 def gettimeanddate(string):
     # Remove the square brackets and the non-breaking space
     string = string.strip('[]').replace(' ', ' ')
@@ -18,6 +18,7 @@ def gettimeanddate(string):
 
     return date + " " + time_24hr
 
+# Function to preprocess the data
 def preprocess(data):
     pattern = r'\[\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2}\s\w{2}\]\s'  # Date-Time Pattern
     messages = re.split(pattern, data)[1:]
@@ -29,23 +30,42 @@ def preprocess(data):
     df['message_date'] = df['message_date'].apply(lambda text: gettimeanddate(text))
     df.rename(columns={'message_date': 'date'}, inplace=True)
 
+    # List of phrases that should be classified as 'Group Notification'
+    group_notification_phrases = [
+        'Messages and calls are end-to-end encrypted',
+        'created this group', 'added you'
+    ]
+
     users = []
     messages = []
 
     # Splitting the message to extract the user and message content
     for message in df['user_messages']:
-        entry = re.split('([\w\W]+?):\s', message)
-        if entry[1:]:
-            users.append(entry[1])
-            messages.append(entry[2])
-        else:
+        # Check if the message contains any of the predefined phrases
+        if any(phrase in message for phrase in group_notification_phrases):
             users.append('Group Notification')
-            messages.append(entry[0])
+            messages.append(message)
+        else:
+            # Split the message to extract the user and message
+            entry = re.split('([\w\W]+?):\s', message)
+            if entry[1:]:
+                users.append(entry[1])  # Add the user
+                messages.append(entry[2])  # Add the message
+            else:
+                # For any other type of message (like notifications), we classify as 'Group Notification'
+                users.append('Group Notification')
+                messages.append(entry[0])
 
+    # Adding the 'User' and 'Message' columns to the dataframe
     df['User'] = users
     df['message'] = messages
 
-    df['message'] = df['message'].apply(lambda text: text.split('\n')[0])
+    # Function to clean the message (removing extra newline characters)
+    def getstring(text):
+        return text.split('\n')[0]
+
+    # Apply the cleaning function to the message column
+    df['message'] = df['message'].apply(lambda text: getstring(text))
 
     df = df.drop(['user_messages'], axis=1)
     df = df[['message', 'date', 'User']]
