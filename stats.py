@@ -33,10 +33,13 @@ def createwordcloud(selected_user, df):
         df = df[df['User'] == selected_user]
 
     # List of words/phrases to exclude from the word cloud
-    exclude_words = ['omitted', 'image omitted', 'sticker omitted', 'gif omitted', 'image', 'sticker','Sticker','Image','GIF']
+    exclude_words = ['omitted', 'image', 'sticker', 'gif']
 
-    # Filter out the excluded words
-    filtered_messages = df['Message'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in exclude_words]))
+    # Regex pattern to match words containing 'image', 'sticker', 'gif', or 'omitted' (case insensitive)
+    exclude_pattern = re.compile(r'\b(?:' + '|'.join(exclude_words) + r')\w*\b', re.IGNORECASE)
+
+    # Filter out the unwanted words using the regex pattern
+    filtered_messages = df['Message'].apply(lambda x: ' '.join([word for word in x.split() if not exclude_pattern.search(word)]))
 
     # Generate the Word Cloud
     wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
