@@ -284,8 +284,13 @@ def network_analysis(df):
                            edge_color=edge_weights, width=2, edge_cmap=plt.cm.Blues, 
                            alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
 
+    # Normalize the node color scale for colorbar
+    norm = mcolors.Normalize(vmin=min(node_color), vmax=max(node_color))
+    sm = plt.cm.ScalarMappable(cmap=plt.cm.YlOrRd, norm=norm)
+    sm.set_array([])  # Empty array for the colorbar
+
     # Add a color bar for the nodes
-    plt.colorbar(node_scatter, label='Node Activity Level')
+    plt.colorbar(sm, label='Node Activity Level')
 
     # Add a custom legend
     legend_elements = [
@@ -297,8 +302,8 @@ def network_analysis(df):
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
 
-    # Return the figure for display
-    return plt
+    # Show the graph
+    plt.show()
 
 # Function to get the user with the maximum responses
 def max_responses_user(df):
