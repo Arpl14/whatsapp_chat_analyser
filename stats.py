@@ -247,8 +247,9 @@ def network_analysis(df):
     # Create an undirected graph
     G = nx.Graph()
 
-    # Filter out 'Group Notification' users
+    # Filter out 'Group Notification' users and users with only 1 message
     filtered_df = df[df['User'] != 'Group Notification']
+    filtered_df = filtered_df.groupby('User').filter(lambda x: len(x) > 1)  # Remove users with only 1 message
 
     # Loop through the filtered messages and create edges between users
     for idx in range(1, len(filtered_df)):
@@ -273,12 +274,7 @@ def network_analysis(df):
 
     # Get the color gradient based on user responses
     node_color = [user_response_count[user] for user in G.nodes]
-    node_size = [300 + 50 * user_response_count[user] for user in G.nodes]  # Reduced node size
-
-    # Normalize the node color scale for colorbar
-    norm_node = mcolors.Normalize(vmin=min(node_color), vmax=max(node_color))
-    sm_node = plt.cm.ScalarMappable(cmap='plasma', norm=norm_node)
-    sm_node.set_array([])
+    node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on number of responses
 
     # Draw the graph with custom settings
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
@@ -286,23 +282,8 @@ def network_analysis(df):
                            edge_color=edge_weights, width=2, edge_cmap=plt.cm.RdYlGn, 
                            alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
 
-    # Add a color bar for the nodes
-    cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
-
-    # Normalize edge color range
-    norm_edge = mcolors.Normalize(vmin=min(edge_weights), vmax=max(edge_weights))
-    sm_edge = plt.cm.ScalarMappable(cmap=plt.cm.RdYlGn, norm=norm_edge)
-    sm_edge.set_array([])
-
-    # Add a color bar for the edges
-    plt.colorbar(sm_edge, ax=plt.gca(), label='Edge Response Frequency')
-
-    # Add a custom legend for user activity
-    legend_elements = [
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='purple', markersize=10, label='Less Active User')
-    ]
-    plt.legend(handles=legend_elements, loc='upper right')
+    # Remove the color bar (legend)
+    plt.clf()
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
