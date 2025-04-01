@@ -290,8 +290,8 @@ def network_analysis(df):
     sm_node = plt.cm.ScalarMappable(cmap=plt.cm.YlOrRd, norm=norm_node)
     sm_node.set_array([])  # Empty array for the colorbar
 
-    # Add a color bar for the nodes
-    cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
+    # # Add a color bar for the nodes
+    # cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
