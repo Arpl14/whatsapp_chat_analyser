@@ -8,6 +8,8 @@ from io import BytesIO
 import re
 
 
+
+
 extract = URLExtract()
 
 # Fetch statistics (group-level and individual user statistics)
@@ -85,6 +87,24 @@ def createwordcloud(selected_user, df):
     img_buf.seek(0)
 
     return img_buf
+
+
+# Existing functions here...
+
+def message_frequency_by_month(df):
+    # Ensure the 'Only date' column is in datetime format
+    df['Only date'] = pd.to_datetime(df['Only date'], errors='coerce')
+
+    # Group by Year and Month to count messages
+    df['Month_Year'] = df['Only date'].dt.to_period('M')  # Convert to Month-Year format
+    message_frequency_by_month_year = df.groupby('Month_Year').count()['Message']
+
+    # Find the top 5 peaks
+    top_5_peaks = message_frequency_by_month_year.nlargest(5)
+
+    # Return the message frequency data and top 5 peaks
+    return message_frequency_by_month_year, top_5_peaks
+
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
