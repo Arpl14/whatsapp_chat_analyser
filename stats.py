@@ -152,11 +152,6 @@ def plot_sentiment_by_user(sentiment_by_user):
     return fig2
 
 
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
-
 # Function to generate word cloud from topic words
 def generate_wordcloud(topic_idx, topic, vectorizer):
     # Get the top words for the topic
@@ -170,8 +165,13 @@ def generate_wordcloud(topic_idx, topic, vectorizer):
     
     # Generate word cloud
     wordcloud = WordCloud(width=800, height=400, background_color='white').generate(topic_text)
+
+    # Save the wordcloud to a BytesIO object
+    img_buf = BytesIO()
+    wordcloud.to_image().save(img_buf, format='PNG')
+    img_buf.seek(0)
     
-    return wordcloud
+    return img_buf
 
 # Function to extract topics and generate word clouds
 def generate_topics_and_wordclouds(df, num_topics=4):
@@ -190,46 +190,6 @@ def generate_topics_and_wordclouds(df, num_topics=4):
         wordclouds.append(wordcloud)
     
     return wordclouds
-
-
-
-
-
-
-# Function to generate word cloud from topic words
-def generate_wordcloud(topic_idx, topic, vectorizer):
-    # Get the top words for the topic
-    topic_words = [vectorizer.get_feature_names_out()[i] for i in topic.argsort()[:-10 - 1:-1]]
-    
-    # Remove the word "omitted" from the list if it exists
-    topic_words = [word for word in topic_words if word != 'omitted']
-    
-    # Join the words and create a string for wordcloud
-    topic_text = ' '.join(topic_words)
-    
-    # Generate word cloud
-    wordcloud = WordCloud(width=800, height=400, background_color='white').generate(topic_text)
-    
-    return wordcloud
-
-# Function to extract topics and generate word clouds
-def generate_topics_and_wordclouds(df, num_topics=4):
-    # Vectorize the messages to a TF-IDF matrix
-    vectorizer = TfidfVectorizer(stop_words='english')
-    X = vectorizer.fit_transform(df['Message'])
-    
-    # Apply LDA to extract topics
-    lda = LatentDirichletAllocation(n_components=num_topics, random_state=42)
-    lda.fit(X)
-    
-    # Store the word clouds for each topic
-    wordclouds = []
-    for topic_idx, topic in enumerate(lda.components_):
-        wordcloud = generate_wordcloud(topic_idx, topic, vectorizer)
-        wordclouds.append(wordcloud)
-    
-    return wordclouds
-
 
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
