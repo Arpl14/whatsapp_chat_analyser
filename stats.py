@@ -347,8 +347,8 @@ def network_analysis(df):
     # Draw the graph with varying edge colors based on response frequency
     nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
             cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
-            edge_color=edge_colors, width=4, edge_cmap=plt.cm.plasma, 
-            alpha=0.7, arrows=True, arrowsize=15)
+            edge_color=edge_colors, width=2, edge_cmap=plt.cm.plasma, 
+            alpha=0.7, arrows=True, arrowsize=8)
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
