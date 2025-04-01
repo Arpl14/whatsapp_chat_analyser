@@ -107,7 +107,6 @@ def message_frequency_by_month(df):
     return message_frequency_by_month_year, top_5_peaks
 
 
-
 # Function to calculate sentiment of a message
 def get_sentiment(text):
     # Check if text is a string (non-null)
@@ -129,6 +128,7 @@ def sentiment_by_user(df):
     sentiment_by_user = df[df['User'] != 'Group Notification'].groupby('User')['sentiment'].mean()
     
     return sentiment_by_user
+
 # Function to handle sentiment plotting consistently
 def plot_group_sentiment(sentiment_by_date, selected_user):
     # Sentiment by date (group sentiment over time)
@@ -148,33 +148,6 @@ def plot_sentiment_by_user(sentiment_by_user):
     ax2.set_ylabel('User')
     plt.tight_layout()  # Adjust the plot to avoid cutoff
     return fig2
-
-# In your app.py
-if selected_user == 'Overall':
-    # Plot the graphs side by side
-    sentiment_by_date = stats.group_sentiment(df)
-    sentiment_by_user = stats.sentiment_by_user(df)
-
-    # Generate the group sentiment plot
-    fig = stats.plot_group_sentiment(sentiment_by_date, selected_user)
-
-    # Generate the sentiment by user plot
-    fig2 = stats.plot_sentiment_by_user(sentiment_by_user)
-
-    # Arrange the plots side by side using `st.columns()`
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.pyplot(fig)
-
-    with col2:
-        st.pyplot(fig2)
-
-else:
-    # If a specific user is selected, only show group sentiment over time
-    sentiment_by_date = stats.group_sentiment(df[df['User'] == selected_user])
-    fig = stats.plot_group_sentiment(sentiment_by_date, selected_user)
-    st.pyplot(fig)
 
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
