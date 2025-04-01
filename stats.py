@@ -242,6 +242,12 @@ def user_segmentation(df):
 
 
 
+
+
+
+
+
+
 # Function to generate a network graph for the group
 def network_analysis(df):
     # Create an undirected graph
@@ -271,18 +277,23 @@ def network_analysis(df):
     # Get the edge weight for adjusting edge color intensity
     edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
 
-    # Get the color gradient based on user responses (more active users have darker colors)
+    # Get the color gradient based on user responses
     node_color = [user_response_count[user] for user in G.nodes]
     node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on number of responses
 
     # Draw the graph with custom settings
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
                            cmap=plt.cm.YlOrRd, font_size=12, font_weight='bold', 
-                           edge_color=edge_weights, width=3, edge_cmap=plt.cm.RdYlGn,  # Using red to green
+                           edge_color=edge_weights, width=3, edge_cmap=plt.cm.RdYlGn,  
                            alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights), arrows=True, arrowsize=15)
 
-    # Remove the color bar for nodes and edges
-    plt.colorbar(node_scatter, label='Node Activity Level')
+    # Create a ScalarMappable for the node color scale
+    norm_node = mcolors.Normalize(vmin=min(node_color), vmax=max(node_color))
+    sm_node = plt.cm.ScalarMappable(cmap=plt.cm.YlOrRd, norm=norm_node)
+    sm_node.set_array([])  # Empty array for the colorbar
+
+    # Add a color bar for the nodes
+    plt.colorbar(sm_node, label='Node Activity Level')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
