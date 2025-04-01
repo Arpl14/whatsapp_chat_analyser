@@ -5,6 +5,7 @@ import emoji
 from urlextract import URLExtract
 import matplotlib.pyplot as plt
 from io import BytesIO
+import re
 
 extract = URLExtract()
 
