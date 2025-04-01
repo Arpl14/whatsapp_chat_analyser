@@ -7,27 +7,51 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import re
 
+
 extract = URLExtract()
 
-# Fetch statistics (number of messages, media, links)
+# Fetch statistics (group-level and individual user statistics)
 def fetchstats(selected_user, df):
-    if selected_user != 'Overall':
-        df = df[df['User'] == selected_user]
+    # Group-level statistics: Total engagement, most active user
+    if selected_user == 'Overall':
+        # Group by User and count messages
+        user_engagement = df['User'].value_counts()
 
-    num_messages = df.shape[0]
+        # Most active user
+        most_active_user = user_engagement.idxmax()
+        most_active_user_messages = user_engagement.max()
+
+        # Return group-level stats
+        group_stats = {
+            "user_engagement": user_engagement,
+            "most_active_user": most_active_user,
+            "most_active_user_messages": most_active_user_messages
+        }
+        
+        return group_stats
+
+    # Individual user statistics
+    df_user = df[df['User'] == selected_user] if selected_user != 'Overall' else df
+
+    # Number of messages, total words, and links
+    num_messages = df_user.shape[0]
     words = []
-    for message in df['Message']:
+    for message in df_user['Message']:
         words.extend(message.split())
-
-    # Counting the number of media files shared
-    media_ommitted = df[df['Message'] == '<Media omitted>']
 
     # Counting the number of links shared
     links = []
-    for message in df['Message']:
+    for message in df_user['Message']:
         links.extend(extract.find_urls(message))
 
-    return num_messages, len(words), media_ommitted.shape[0], len(links)
+    # Return individual stats
+    individual_stats = {
+        "num_messages": num_messages,
+        "num_words": len(words),
+        "links": len(links)
+    }
+
+    return individual_stats
 
 def createwordcloud(selected_user, df):
     if selected_user != 'Overall':
