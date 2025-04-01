@@ -30,7 +30,6 @@ if uploaded_file is not None:
     
     # Show group-level statistics (if 'Overall' is selected)
     if selected_user == 'Overall':
-        st.title("Group Sentiment Analysis")
         st.write(f"Most active user: {group_stats['most_active_user']} with {group_stats['most_active_user_messages']} messages")
         st.write(f"Total messages in the group: {group_stats['total_messages']}")
         st.write(f"Total links shared in the group: {group_stats['total_links']}")
