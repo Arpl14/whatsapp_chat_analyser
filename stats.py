@@ -32,12 +32,13 @@ def createwordcloud(selected_user, df):
     if selected_user != 'Overall':
         df = df[df['User'] == selected_user]
 
+    # Generate the Word Cloud
     wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
     df_wc = wc.generate(df['Message'].str.cat(sep=" "))
 
     # Save the word cloud image to a BytesIO object
     img_buf = BytesIO()
-    df_wc.to_image().save(img_buf, format='PNG')
+    df_wc.to_image().save(img_buf, format='PNG')  # Save as PNG format
     img_buf.seek(0)
 
     return img_buf
