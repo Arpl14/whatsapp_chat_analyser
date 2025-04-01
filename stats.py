@@ -72,6 +72,11 @@ def fetchstats(selected_user, df):
 
     return individual_stats
 
+
+def weekactivitymap(df):
+    # Calculate the count of messages for each day of the week
+    return df['Day_name'].value_counts()
+
 def createwordcloud(selected_user, df):
     if selected_user != 'Overall':
         df = df[df['User'] == selected_user]
