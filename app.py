@@ -112,7 +112,7 @@ if uploaded_file is not None:
 
     
     # Sentiment Analysis: Group Sentiment Over Time
-    st.title("Group Sentiment Analysis")
+    st.title("Sentiment Analysis Trend")
 
     # Sentiment by date (group sentiment over time)
     if selected_user != 'Overall':
@@ -155,21 +155,43 @@ if uploaded_file is not None:
     # User Segmentation
     st.title("User Segmentation")
 
-    # Generate user segmentation plot
-    segmentation_fig = stats.user_segmentation(df)
-    st.pyplot(segmentation_fig)
+    # # Generate user segmentation plot
+    # segmentation_fig = stats.user_segmentation(df)
+    # st.pyplot(segmentation_fig)
 
     
 
-    # Display network analysis graph only for the 'Overall' user
+    # # Display network analysis graph only for the 'Overall' user
+    # if selected_user == 'Overall':
+    #     st.title("User Interaction Network")
+    #     # Generate network graph for group
+    #     network_fig = stats.network_analysis(df)
+    #     st.pyplot(network_fig)
+
+    #     # Display the user with the maximum responses
+    #     most_active_user, most_active_user_responses = stats.max_responses_user(df)
+    #     st.write(f"Most active user: {most_active_user} with {most_active_user_responses} responses.")
+    #     st.write("The color of the nodes represents the activity level of each user. The colour scale for nodes is (blue -> pink -> orange -> yellow), with blue being least responsive and yellow being most responsive. The node size is also based on the number of messages they sent. "
+    #      "\n\nSimilarly, the arrows denote responsiveness between the two users they connect. The arrow colour scale is (blue -> red -> green), with blue being least responsive and green being most responsive. The arrow direction shows the message direction.")
+
+
+# Add the segmentation plot if the selected user is 'Overall'
     if selected_user == 'Overall':
+    # Generate user segmentation plot
+        segmentation_fig = stats.user_segmentation(df)
+        st.pyplot(segmentation_fig)
+
+    # Display network analysis graph only for the 'Overall' user
         st.title("User Interaction Network")
-        # Generate network graph for group
+    # Generate network graph for group
         network_fig = stats.network_analysis(df)
         st.pyplot(network_fig)
 
-        # Display the user with the maximum responses
+    # Display the user with the maximum responses
         most_active_user, most_active_user_responses = stats.max_responses_user(df)
         st.write(f"Most active user: {most_active_user} with {most_active_user_responses} responses.")
         st.write("The color of the nodes represents the activity level of each user. The colour scale for nodes is (blue -> pink -> orange -> yellow), with blue being least responsive and yellow being most responsive. The node size is also based on the number of messages they sent. "
-         "\n\nSimilarly, the arrows denote responsiveness between the two users they connect. The arrow colour scale is (blue -> red -> green), with blue being least responsive and green being most responsive. The arrow direction shows the message direction.")
+             "\n\nSimilarly, the arrows denote responsiveness between the two users they connect. The arrow colour scale is (blue -> red -> green), with blue being least responsive and green being most responsive. The arrow direction shows the message direction.")
+    else:
+    # Display nothing if any individual user is selected
+    pass
