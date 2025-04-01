@@ -29,15 +29,27 @@ if uploaded_file is not None:
     # Sidebar selection for users
     selected_user = st.sidebar.selectbox("Select a user for analysis", user_list)
 
-    # Fetch basic statistics for the selected user
-    num_messages, num_words, media_omitted, links = stats.fetchstats(selected_user, df)
+    # Fetch group-level statistics (if 'Overall' is selected)
+    group_stats = stats.fetchstats(selected_user, df)
 
-    # Display basic stats
-    st.title(f"WhatsApp Chat Analysis for {selected_user}")
-    st.write(f"Number of messages: {num_messages}")
-    st.write(f"Total number of words: {num_words}")
-    st.write(f"Media omitted: {media_omitted}")
-    st.write(f"Links shared: {links}")
+    # Show group-level statistics (if 'Overall' is selected)
+    if selected_user == 'Overall':
+        st.title("WhatsApp Group Engagement Analysis")
+
+        st.write(f"Most active user: {group_stats['most_active_user']} with {group_stats['most_active_user_messages']} messages")
+
+        # Display user engagement (number of messages for each user)
+        st.write("User Engagement:")
+        st.bar_chart(group_stats['user_engagement'])
+
+    # Show individual user statistics (messages, links, and words)
+    else:
+        st.title(f"WhatsApp Chat Analysis for {selected_user}")
+        individual_stats = group_stats
+
+        st.write(f"Number of messages: {individual_stats['num_messages']}")
+        st.write(f"Total number of words: {individual_stats['num_words']}")
+        st.write(f"Links shared: {individual_stats['links']}")
 
     # Word Cloud
     st.title("Word Cloud")
