@@ -147,6 +147,21 @@ if uploaded_file is not None:
     st.pyplot(segmentation_fig)
 
 
+
+
+
+ # Display network analysis graph only for the 'Overall' user
+    if selected_user == 'Overall':
+        st.title("User Interaction Network")
+        # Generate network graph for group
+        network_fig = stats.network_analysis(df)
+        st.pyplot(network_fig)
+
+        # Display the user with the maximum responses
+        most_active_user, most_active_user_responses = stats.max_responses_user(df)
+        st.write(f"Most active user: {most_active_user} with {most_active_user_responses} responses.")
+        st.write("The color of the nodes represents the activity level of each user. Darker colors indicate users with higher activity levels, and the node size is based on the number of messages they sent.")
+
     # # Most Common Words
     # st.title("Most Common Words")
     # common_words = stats.getcommonwords(selected_user, df)
