@@ -342,12 +342,12 @@ def network_analysis(df):
     node_size = [500 + 30 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
     # Draw the graph with custom settings
-    edge_colors = [mcolors.to_rgba(plt.cm.tab20b(weight / max(edge_weights))[:3]) for weight in edge_weights]
+    edge_colors = [mcolors.to_rgba(plt.cm.tab10(weight / max(edge_weights))[:3]) for weight in edge_weights]
 
     # Draw the graph with varying edge colors based on response frequency
     nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
             cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
-            edge_color=edge_colors, width=3, edge_cmap=plt.cm.tab20b, 
+            edge_color=edge_colors, width=3, edge_cmap=plt.cm.tab10, 
             alpha=0.6, arrows=True, arrowsize=8)
 
     # Title for the graph
