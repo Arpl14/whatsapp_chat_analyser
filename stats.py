@@ -300,23 +300,18 @@ def user_segmentation(df):
 #     plt.show()
 
 
-
-# Function to generate the network analysis
 def network_analysis(df, selected_user):
-    # Check if the selected user is 'Overall'
+    # Filter out 'Group Notification' users and the selected user if necessary
     if selected_user != 'Overall':
-        return  # Do not show the network analysis for users other than 'Overall'
+        df = df[df['User'] == selected_user]
     
-    # Create a directed graph
+    # Create an undirected graph (directed graph if needed)
     G = nx.DiGraph()
 
-    # Filter out 'Group Notification' users
-    filtered_df = df[df['User'] != 'Group Notification']
-
     # Loop through the filtered messages and create edges between users
-    for idx in range(1, len(filtered_df)):
-        user1 = filtered_df['User'].iloc[idx-1]
-        user2 = filtered_df['User'].iloc[idx]
+    for idx in range(1, len(df)):
+        user1 = df['User'].iloc[idx - 1]
+        user2 = df['User'].iloc[idx]
         
         # Avoid self-responses (no edge between the same user)
         if user1 != user2:
@@ -334,50 +329,24 @@ def network_analysis(df, selected_user):
     # Get the edge weight for adjusting edge color intensity
     edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
 
-    # Get the color gradient for nodes (more active users are green, less active are purple)
+    # Get the color gradient based on user responses (more active users have darker colors)
     node_color = [user_response_count[user] for user in G.nodes]
-    node_size = [500 + 50 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
-
-    # Shorten node labels to the first two words of the user's name
-    node_labels = {user: ' '.join(user.split()[:2]) for user in G.nodes}
+    node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
     # Draw the graph with custom settings
-    edge_colors = [mcolors.to_rgba(plt.cm.brg(weight / max(edge_weights))[:3]) for weight in edge_weights]
-
-    # Draw the graph with varying edge colors based on response frequency
-    nx.draw(G, with_labels=True, labels=node_labels, node_size=node_size, node_color=node_color, 
-            cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
-            edge_color=edge_colors, width=3, edge_cmap=plt.cm.brg, 
-            alpha=0.6, arrows=True, arrowsize=8)
+    nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color,
+            cmap=plt.cm.plasma, font_size=12, font_weight='bold',
+            edge_color=edge_weights, width=2, edge_cmap=plt.cm.Purples,  # Change to use Purple-to-Green
+            alpha=0.7, arrows=True, arrowsize=15)
 
     # Title for the graph
-    plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
+    plt.title(f'Who Responds to Whom: User Interaction Network ({selected_user})', fontsize=16)
 
     # Show the graph
     plt.show()
 
-    # Add legends below the chart
-    fig, ax = plt.subplots(figsize=(10, 2))  # Creating an additional plot for the legend
-    ax.set_axis_off()  # Hide axes
-
-    # Create the legend for the nodes
-    node_legend = [
-        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(0), markersize=10, label='Low Activity'),
-        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(1), markersize=10, label='High Activity')
-    ]
-
-    # Create the legend for the edges
-    edge_legend = [
-        plt.Line2D([0], [0], color=plt.cm.brg(0), lw=4, label='Low Response'),
-        plt.Line2D([0], [0], color=plt.cm.brg(1), lw=4, label='High Response')
-    ]
-
-    # Add legends to the plot
-    ax.legend(handles=node_legend, loc='upper left')
-    ax.legend(handles=edge_legend, loc='upper right')
-
-    # Display the legends below the graph
-    plt.show()
+    # Return the figure object
+    return plt
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
 #         df = df[df['User'] == selecteduser]
