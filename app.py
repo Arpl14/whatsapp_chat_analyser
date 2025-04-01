@@ -34,9 +34,8 @@ if uploaded_file is not None:
         st.write(f"Most active user: {group_stats['most_active_user']} with {group_stats['most_active_user_messages']} messages")
         st.write(f"Total messages in the group: {group_stats['total_messages']}")
         st.write(f"Total links shared in the group: {group_stats['total_links']}")
-        st.write(f"Number of messages: {group_stats['num_messages']}")
-        st.write(f"Total number of words: {group_stats['num_words']}")
-        st.write(f"Links shared: {group_stats['links']}")
+        st.write(f"Number of messages: {group_stats['total_messages']}")
+        st.write(f"Links shared: {group_stats['total_links']}")
 
         # Display user engagement (number of messages for each user)
         st.write("User Engagement:")
