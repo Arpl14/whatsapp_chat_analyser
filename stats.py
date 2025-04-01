@@ -3,10 +3,8 @@ from collections import Counter
 from wordcloud import WordCloud
 import emoji
 from urlextract import URLExtract
-from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from io import BytesIO
-
 
 extract = URLExtract()
 
@@ -37,48 +35,49 @@ def createwordcloud(selected_user, df):
     wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
     df_wc = wc.generate(df['Message'].str.cat(sep=" "))
 
-    # Save the word cloud image to a BytesIO object to pass it to Streamlit
+    # Save the word cloud image to a BytesIO object
     img_buf = BytesIO()
     df_wc.to_image().save(img_buf, format='PNG')
     img_buf.seek(0)
+
     return img_buf
-# Emoji statistics
-def getemojistats(selecteduser, df):
-    if selecteduser != 'Overall':
-        df = df[df['User'] == selecteduser]
+# # Emoji statistics
+# def getemojistats(selecteduser, df):
+#     if selecteduser != 'Overall':
+#         df = df[df['User'] == selecteduser]
 
-    emojis = []
-    for message in df['Message']:
-        emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI['en']])
+#     emojis = []
+#     for message in df['Message']:
+#         emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI['en']])
 
-    emojidf = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
-    return emojidf
+#     emojidf = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
+#     return emojidf
 
-# Monthly Timeline
-def monthtimeline(selecteduser, df):
-    if selecteduser != 'Overall':
-        df = df[df['User'] == selecteduser]
+# # Monthly Timeline
+# def monthtimeline(selecteduser, df):
+#     if selecteduser != 'Overall':
+#         df = df[df['User'] == selecteduser]
 
-    temp = df.groupby(['Year', 'Month_num', 'Month']).count()['Message'].reset_index()
-    time = []
-    for i in range(temp.shape[0]):
-        time.append(temp['Month'][i]+"-"+str(temp['Year'][i]))
-    temp['Time'] = time
-    return temp
+#     temp = df.groupby(['Year', 'Month_num', 'Month']).count()['Message'].reset_index()
+#     time = []
+#     for i in range(temp.shape[0]):
+#         time.append(temp['Month'][i]+"-"+str(temp['Year'][i]))
+#     temp['Time'] = time
+#     return temp
 
-# Most common words
-def getcommonwords(selecteduser, df):
-    file = open('stop_hinglish.txt', 'r')
-    stopwords = file.read().split('\n')
+# # Most common words
+# def getcommonwords(selecteduser, df):
+#     file = open('stop_hinglish.txt', 'r')
+#     stopwords = file.read().split('\n')
 
-    if selecteduser != 'Overall':
-        df = df[df['User'] == selecteduser]
+#     if selecteduser != 'Overall':
+#         df = df[df['User'] == selecteduser]
 
-    words = []
-    for message in df['Message']:
-        for word in message.lower().split():
-            if word not in stopwords:
-                words.append(word)
+#     words = []
+#     for message in df['Message']:
+#         for word in message.lower().split():
+#             if word not in stopwords:
+#                 words.append(word)
 
-    mostcommon = pd.DataFrame(Counter(words).most_common(20))
-    return mostcommon
+#     mostcommon = pd.DataFrame(Counter(words).most_common(20))
+#     return mostcommon
