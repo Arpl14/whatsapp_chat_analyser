@@ -1,4 +1,4 @@
-import streamlit as st
+mport streamlit as st
 import preprocess
 import stats
 import matplotlib.pyplot as plt
@@ -42,9 +42,10 @@ if uploaded_file is not None:
     # Word Cloud
     st.title("Word Cloud")
     wc_img = stats.createwordcloud(selected_user, df)
-    
+
     # Display the Word Cloud image in Streamlit
     st.image(wc_img, caption='Word Cloud for Messages', use_column_width=True)
+
 
     # # Most Common Words
     # st.title("Most Common Words")
