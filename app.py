@@ -174,7 +174,6 @@ if selected_user == 'Overall':
              "\n\nSimilarly, the arrows denote responsiveness between the two users they connect. The arrow colour scale is (blue -> red -> green), with blue being least responsive and green being most responsive. The arrow direction shows the message direction.")
 else:
     # Do nothing for individual user selection, no title or graph displayed
-    passthing if any individual user is selected
     pass
 
     # # Generate user segmentation plot
