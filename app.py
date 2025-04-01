@@ -298,13 +298,15 @@ if uploaded_file is not None:
     plt.xticks(rotation=45)
     st.pyplot(fig)
 
-    # Sentiment Analysis: Group Sentiment Over Time
-    st.title("Sentiment Analysis Trend")
-
     # Sentiment by date (group sentiment over time)
     if selected_user != 'Overall':
         df_filtered = df[df['User'] == selected_user]  # Filter for specific user if not Overall
 
+
+    # Sentiment Analysis: Group Sentiment Over Time
+    st.title("Sentiment Analysis Trend")
+
+    
     # Group Sentiment Over Time Plot
     sentiment_by_date = stats.group_sentiment(df_filtered)
     fig = stats.plot_group_sentiment(sentiment_by_date, selected_user)
