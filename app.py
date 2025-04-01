@@ -100,9 +100,8 @@ if uploaded_file is not None:
     sentiment_by_user.plot(kind='barh', color='skyblue', ax=ax2, title='Sentiment by User')
     ax2.set_xlabel('Average Sentiment')
     ax2.set_ylabel('User')
-
-    # Arrange the plots side by side
-    col1, col2 = st.beta_columns(2)
+    # Arrange the plots side by side using `columns` instead of `beta_columns`
+    col1, col2 = st.columns(2)
 
     with col1:
         st.pyplot(fig)
