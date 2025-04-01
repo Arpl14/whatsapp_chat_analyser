@@ -242,6 +242,8 @@ def user_segmentation(df):
 
 
 
+
+
 # Function to generate a network graph for the group
 def network_analysis(df):
     # Create an undirected graph
@@ -280,6 +282,13 @@ def network_analysis(df):
                            cmap='coolwarm', font_size=12, font_weight='bold',  # Change color palette to 'coolwarm'
                            edge_color=edge_weights, width=3, edge_cmap='coolwarm',  # Change edge color to 'coolwarm'
                            alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
+
+    # Add a custom legend
+    legend_elements = [
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='lightgray', markersize=10, label='Less Active User')
+    ]
+    plt.legend(handles=legend_elements, loc='upper right')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
