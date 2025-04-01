@@ -85,7 +85,9 @@ if uploaded_file is not None:
     # Display the plot in Streamlit
     st.pyplot(fig)
 
-    # Sentiment Analysis: Group Sentiment Over Time
+
+    
+  # Sentiment Analysis: Group Sentiment Over Time
     st.title("Group Sentiment Analysis")
 
     # Sentiment by date (group sentiment over time)
@@ -101,9 +103,9 @@ if uploaded_file is not None:
     if selected_user == 'Overall':
         sentiment_by_user = stats.sentiment_by_user(df)
 
-    # Sentiment by User Horizontal Bar Plot
-    fig2 = stats.plot_sentiment_by_user(sentiment_by_user)
-    st.pyplot(fig2)
+        # Sentiment by User Horizontal Bar Plot
+        fig2 = stats.plot_sentiment_by_user(sentiment_by_user)
+        st.pyplot(fig2)
 
 
     # # Most Common Words
