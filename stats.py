@@ -3,6 +3,10 @@ from collections import Counter
 from wordcloud import WordCloud
 import emoji
 from urlextract import URLExtract
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+from io import BytesIO
+
 
 extract = URLExtract()
 
@@ -26,15 +30,18 @@ def fetchstats(selected_user, df):
 
     return num_messages, len(words), media_ommitted.shape[0], len(links)
 
-# Word Cloud for messages
 def createwordcloud(selected_user, df):
     if selected_user != 'Overall':
         df = df[df['User'] == selected_user]
 
     wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
     df_wc = wc.generate(df['Message'].str.cat(sep=" "))
-    return df_wc
 
+    # Save the word cloud image to a BytesIO object to pass it to Streamlit
+    img_buf = BytesIO()
+    df_wc.to_image().save(img_buf, format='PNG')
+    img_buf.seek(0)
+    return img_buf
 # Emoji statistics
 def getemojistats(selecteduser, df):
     if selecteduser != 'Overall':
