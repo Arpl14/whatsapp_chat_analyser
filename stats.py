@@ -246,8 +246,6 @@ def user_segmentation(df):
 
 
 
-
-
 # Function to generate a network graph for the group
 def network_analysis(df):
     # Create an undirected graph
@@ -293,7 +291,7 @@ def network_analysis(df):
     sm_node.set_array([])  # Empty array for the colorbar
 
     # Add a color bar for the nodes
-    plt.colorbar(sm_node, label='Node Activity Level')
+    cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
