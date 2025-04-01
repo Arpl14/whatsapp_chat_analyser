@@ -246,6 +246,14 @@ def user_segmentation(df):
 
 
 
+def get_emojis(text):
+    emoji_pattern = re.compile("[\U0001F600-\U0001F64F\u2700-\u27BF\u24C2-\u1F251\u1F004-\u1F0CF]+", flags=re.UNICODE)
+    return emoji_pattern.findall(text)
+
+# Example usage:
+message = "Hello 😊, how are you? 🥳"
+emojis = get_emojis(message)
+print(emojis)  # ['😊', '🥳']
 
 
 # Function to get most common emojis
