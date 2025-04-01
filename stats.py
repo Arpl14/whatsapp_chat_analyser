@@ -242,11 +242,10 @@ def user_segmentation(df):
 
 
 
-
-# Function to generate a directed network graph for the group
+# Function to generate a network graph for the group
 def network_analysis(df):
-    # Create a directed graph
-    G = nx.DiGraph()
+    # Create an undirected graph
+    G = nx.Graph()
 
     # Filter out 'Group Notification' users
     filtered_df = df[df['User'] != 'Group Notification']
@@ -267,20 +266,43 @@ def network_analysis(df):
     plt.figure(figsize=(14, 14))
 
     # Get the number of responses per user (for node color gradient)
-    user_response_count = {user: G.out_degree(user) for user in G.nodes}
+    user_response_count = {user: G.degree(user) for user in G.nodes}
 
-    # Get the edge weight for adjusting arrow thickness
+    # Get the edge weight for adjusting edge color intensity
     edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
 
     # Get the color gradient based on user responses
     node_color = [user_response_count[user] for user in G.nodes]
-    node_size = [500 + 200 * user_response_count[user] for user in G.nodes]  # Size of the node based on number of responses
+    node_size = [300 + 50 * user_response_count[user] for user in G.nodes]  # Reduced node size
+
+    # Normalize the node color scale for colorbar
+    norm_node = mcolors.Normalize(vmin=min(node_color), vmax=max(node_color))
+    sm_node = plt.cm.ScalarMappable(cmap='plasma', norm=norm_node)
+    sm_node.set_array([])
 
     # Draw the graph with custom settings
-    nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
-            cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
-            edge_color=edge_weights, width=4, edge_cmap=plt.cm.plasma, arrows=True, 
-            arrowsize=15, alpha=0.7)
+    node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
+                           cmap='plasma', font_size=12, font_weight='bold', 
+                           edge_color=edge_weights, width=2, edge_cmap=plt.cm.RdYlGn, 
+                           alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
+
+    # Add a color bar for the nodes
+    cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
+
+    # Normalize edge color range
+    norm_edge = mcolors.Normalize(vmin=min(edge_weights), vmax=max(edge_weights))
+    sm_edge = plt.cm.ScalarMappable(cmap=plt.cm.RdYlGn, norm=norm_edge)
+    sm_edge.set_array([])
+
+    # Add a color bar for the edges
+    plt.colorbar(sm_edge, ax=plt.gca(), label='Edge Response Frequency')
+
+    # Add a custom legend for user activity
+    legend_elements = [
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='purple', markersize=10, label='Less Active User')
+    ]
+    plt.legend(handles=legend_elements, loc='upper right')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
