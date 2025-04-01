@@ -85,6 +85,23 @@ if uploaded_file is not None:
     # Display the plot in Streamlit
     st.pyplot(fig)
 
+
+
+    # Get the day of the week activity (most active day)
+    activity_by_day = stats.weekactivitymap(df)
+
+    # Plotting Activity by Day of the Week
+    st.title("Activity by Day of the Week")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(activity_by_day.index, activity_by_day.values, color='skyblue')
+    ax.set_xlabel('Day of the Week')
+    ax.set_ylabel('Message Count')
+    ax.set_title('Messages Sent per Day of the Week')
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
+
+
+    
     # Sentiment Analysis: Group Sentiment Over Time
     st.title("Group Sentiment Analysis")
 
@@ -132,6 +149,8 @@ if uploaded_file is not None:
     # Generate user segmentation plot
     segmentation_fig = stats.user_segmentation(df)
     st.pyplot(segmentation_fig)
+
+    
 
     # Display network analysis graph only for the 'Overall' user
     if selected_user == 'Overall':
