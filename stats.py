@@ -108,8 +108,6 @@ def message_frequency_by_month(df):
 
 
 
-# Existing functions here...
-
 # Function to calculate sentiment of a message
 def get_sentiment(text):
     # Check if text is a string (non-null)
@@ -131,6 +129,26 @@ def sentiment_by_user(df):
     sentiment_by_user = df[df['User'] != 'Group Notification'].groupby('User')['sentiment'].mean()
     
     return sentiment_by_user
+
+# Function to handle sentiment plotting consistently
+def plot_group_sentiment(sentiment_by_date, selected_user):
+    # Sentiment by date (group sentiment over time)
+    fig, ax = plt.subplots(figsize=(10, 6))  # Consistent size
+    sentiment_by_date.plot(kind='line', ax=ax, title=f'{selected_user} Sentiment Over Time' if selected_user != 'Overall' else 'Group Sentiment Over Time')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Sentiment')
+    plt.xticks(rotation=45)
+    plt.tight_layout()  # Adjust the plot to avoid cutoff
+    return fig
+
+# Function to handle sentiment by user plotting consistently
+def plot_sentiment_by_user(sentiment_by_user):
+    fig2, ax2 = plt.subplots(figsize=(10, 6))  # Consistent size
+    sentiment_by_user.plot(kind='barh', color='skyblue', ax=ax2, title='Sentiment by User')
+    ax2.set_xlabel('Average Sentiment')
+    ax2.set_ylabel('User')
+    plt.tight_layout()  # Adjust the plot to avoid cutoff
+    return fig2
 
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
