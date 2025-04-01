@@ -35,7 +35,6 @@ if uploaded_file is not None:
     # Show group-level statistics (if 'Overall' is selected)
     if selected_user == 'Overall':
         st.title("Group Sentiment Analysis")
-
         st.write(f"Most active user: {group_stats['most_active_user']} with {group_stats['most_active_user_messages']} messages")
         st.write(f"Total messages in the group: {group_stats['total_messages']}")
         st.write(f"Total links shared in the group: {group_stats['total_links']}")
@@ -57,6 +56,7 @@ if uploaded_file is not None:
     st.title("Word Cloud")
     wc_img = stats.createwordcloud(selected_user, df)
     st.image(wc_img, caption='Word Cloud for Messages', use_column_width=True)
+
     # Message Frequency by Month-Year
     st.title("Message Frequency by Month-Year")
     # Filter the data based on the selected user
@@ -85,9 +85,7 @@ if uploaded_file is not None:
     # Display the plot in Streamlit
     st.pyplot(fig)
 
-
-    
-  # Sentiment Analysis: Group Sentiment Over Time
+    # Sentiment Analysis: Group Sentiment Over Time
     st.title("Group Sentiment Analysis")
 
     # Sentiment by date (group sentiment over time)
@@ -106,10 +104,6 @@ if uploaded_file is not None:
         # Sentiment by User Horizontal Bar Plot
         fig2 = stats.plot_sentiment_by_user(sentiment_by_user)
         st.pyplot(fig2)
-
-
-
-
 
     # Topic Modeling and Word Clouds
     st.title("Topic Modeling and Word Clouds")
@@ -132,13 +126,6 @@ if uploaded_file is not None:
     with col4:
         st.image(wordclouds[3], caption="Topic 4")
 
-
-
-
-
-
-
-
     # User Segmentation
     st.title("User Segmentation")
 
@@ -146,76 +133,7 @@ if uploaded_file is not None:
     segmentation_fig = stats.user_segmentation(df)
     st.pyplot(segmentation_fig)
 
-
-
     if selected_user == 'Overall':
-    # Generate network graph for group
+        # Generate network graph for group
         network_fig = stats.network_analysis(df)
         st.pyplot(network_fig)
-
-     #    # Display the user with the maximum responses
-     # most_active_user, most_active_user_responses = stats.max_responses_user(df)
-     # st.write(f"Most active user: {most_active_user} with {most_active_user_responses} responses.")
-     # st.write("The color of the nodes represents the activity level of each user. Darker colors indicate users with higher activity levels, and the node size is based on the number of messages they sent.")
-
-    # # Most Common Words
-    # st.title("Most Common Words")
-    # common_words = stats.getcommonwords(selected_user, df)
-    # st.dataframe(common_words)
-
-    # # Emoji Statistics
-    # st.title("Emoji Statistics")
-    # emoji_stats = stats.getemojistats(selected_user, df)
-    # st.dataframe(emoji_stats)
-
-    # # Monthly Timeline
-    # st.title("Monthly Timeline")
-    # month_time = stats.monthtimeline(selected_user, df)
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # ax.plot(month_time['Time'], month_time['Message'])
-    # plt.xticks(rotation=45)
-    # st.pyplot(fig)
-
-    # # Activity Maps - Most Busy Day
-    # st.title("Activity by Day")
-    # busy_day = stats.weekactivitymap(selected_user, df)
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # ax.bar(busy_day.index, busy_day.values, color='purple')
-    # plt.xticks(rotation='vertical')
-    # st.pyplot(fig)
-
-    # # Activity Maps - Most Busy Month
-    # st.title("Activity by Month")
-    # busy_month = stats.monthactivitymap(selected_user, df)
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # ax.bar(busy_month.index, busy_month.values, color='orange')
-    # plt.xticks(rotation='vertical')
-    # st.pyplot(fig)
-
-    # # Sentiment Analysis - Sentiment Over Time
-    # st.title("Sentiment Over Time")
-    # sentiment_by_date = df.groupby('Only date')['sentiment'].mean()
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # sentiment_by_date.plot(kind='line', title='Group Sentiment Over Time', ax=ax)
-    # ax.set_xlabel('Date')
-    # ax.set_ylabel('Sentiment')
-    # st.pyplot(fig)
-
-    # # Response Time Analysis
-    # st.title("Response Time by User")
-    # response_time_by_user = stats.fetchresponsebyuser(df)
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # response_time_by_user.plot(kind='bar', title='Average Response Time by User', ax=ax)
-    # ax.set_xlabel('User')
-    # ax.set_ylabel('Response Time (seconds)')
-    # st.pyplot(fig)
-
-    # # Influencer Analysis - Top Influencers
-    # st.title("Top Influencers")
-    # top_influencers = stats.fetch_top_influencers(df)
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # top_influencers.plot(kind='bar', title='Top 10 Influencers', ax=ax)
-    # ax.set_xlabel('User')
-    # ax.set_ylabel('Message Count')
-    # ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-    # st.pyplot(fig)
