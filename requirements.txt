@@ -9,3 +9,4 @@ textblob
 scikit-learn
 dask
 networkx
+stats
