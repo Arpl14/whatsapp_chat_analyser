@@ -3,6 +3,8 @@ import preprocess
 import stats
 import matplotlib.pyplot as plt
 
+
+    st.title("Whatsapp Chat Analyser")
 # Title for the Streamlit app
 st.sidebar.title("WhatsApp Chat Analyzer")
 # File uploader to upload WhatsApp group chat file
