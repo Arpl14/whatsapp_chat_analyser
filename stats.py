@@ -245,11 +245,10 @@ def user_segmentation(df):
 # Function to generate a network graph for the group
 def network_analysis(df):
     # Create an undirected graph
-    G = nx.Graph()
+    G = nx.Graph()  # If you want a directed graph, use nx.DiGraph()
 
-    # Filter out 'Group Notification' users and users with only 1 message
+    # Filter out 'Group Notification' users from the dataframe
     filtered_df = df[df['User'] != 'Group Notification']
-    filtered_df = filtered_df.groupby('User').filter(lambda x: len(x) > 1)  # Remove users with only 1 message
 
     # Loop through the filtered messages and create edges between users
     for idx in range(1, len(filtered_df)):
@@ -272,31 +271,24 @@ def network_analysis(df):
     # Get the edge weight for adjusting edge color intensity
     edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
 
-    # Get the color gradient based on user responses
+    # Get the color gradient based on user responses (more active users have darker colors)
     node_color = [user_response_count[user] for user in G.nodes]
     node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on number of responses
 
     # Draw the graph with custom settings
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
-                           cmap='plasma', font_size=12, font_weight='bold', 
-                           edge_color=edge_weights, width=2, edge_cmap=plt.cm.RdYlGn, 
-                           alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
+                           cmap=plt.cm.YlOrRd, font_size=12, font_weight='bold', 
+                           edge_color=edge_weights, width=3, edge_cmap=plt.cm.RdYlGn,  # Using red to green
+                           alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights), arrows=True, arrowsize=15)
 
-    # Remove the color bar (legend)
-    plt.clf()
+    # Remove the color bar for nodes and edges
+    plt.colorbar(node_scatter, label='Node Activity Level')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
 
     # Show the graph
     plt.show()
-
-# Function to get the user with the maximum responses
-def max_responses_user(df):
-    user_response_count = df['User'].value_counts()
-    most_active_user = user_response_count.idxmax()
-    most_active_user_responses = user_response_count.max()
-    return most_active_user, most_active_user_responses
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
 #         df = df[df['User'] == selecteduser]
