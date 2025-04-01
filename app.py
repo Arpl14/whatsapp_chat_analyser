@@ -155,7 +155,6 @@ if uploaded_file is not None:
     # User Segmentation
     st.title("User Segmentation")
 
-
 # Add the segmentation plot if the selected user is 'Overall'
 if selected_user == 'Overall':
     # Generate user segmentation plot
@@ -174,7 +173,8 @@ if selected_user == 'Overall':
     st.write("The color of the nodes represents the activity level of each user. The colour scale for nodes is (blue -> pink -> orange -> yellow), with blue being least responsive and yellow being most responsive. The node size is also based on the number of messages they sent. "
              "\n\nSimilarly, the arrows denote responsiveness between the two users they connect. The arrow colour scale is (blue -> red -> green), with blue being least responsive and green being most responsive. The arrow direction shows the message direction.")
 else:
-    # Display nothing if any individual user is selected
+    # Do nothing for individual user selection, no title or graph displayed
+    passthing if any individual user is selected
     pass
 
     # # Generate user segmentation plot
