@@ -10,6 +10,8 @@ from textblob import TextBlob
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 
 
 
@@ -191,6 +193,48 @@ def generate_topics_and_wordclouds(df, num_topics=4):
     
     return wordclouds
 
+
+
+
+
+
+
+
+
+
+# Function for user segmentation using KMeans clustering
+def user_segmentation(df):
+    # Filter out 'Group Notification' users
+    user_data = df[df['User'] != 'Group Notification']
+
+    # Segment users based on activity (message count, sentiment)
+    user_data = user_data.groupby('User').agg({'Message': 'count', 'sentiment': 'mean'}).reset_index()
+
+    # Normalize the data
+    scaler = StandardScaler()
+    user_data[['Message', 'sentiment']] = scaler.fit_transform(user_data[['Message', 'sentiment']])
+
+    # Apply KMeans clustering
+    kmeans = KMeans(n_clusters=3, random_state=42)
+    user_data['Cluster'] = kmeans.fit_predict(user_data[['Message', 'sentiment']])
+
+    # Visualize the clusters
+    fig, ax = plt.subplots(figsize=(10, 6))
+    scatter = ax.scatter(user_data['Message'], user_data['sentiment'], c=user_data['Cluster'], cmap='viridis')
+
+    # Adding labels for each user (first two words of the user's name)
+    for i in range(len(user_data)):
+        user_name = user_data['User'].iloc[i]
+        label = ' '.join(user_name.split()[:2])  # Take the first two words
+        ax.text(user_data['Message'].iloc[i], user_data['sentiment'].iloc[i], label, 
+                 fontsize=9, alpha=0.7, ha='right', color='black')
+
+    ax.set_title('User Segmentation')
+    ax.set_xlabel('Message Count')
+    ax.set_ylabel('Average Sentiment')
+    plt.colorbar(scatter, label='Cluster')
+
+    return fig
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
