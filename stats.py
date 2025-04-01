@@ -299,19 +299,22 @@ def user_segmentation(df):
 #     # Show the graph
 #     plt.show()
 
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
-def network_analysis(df, selected_user):
-    # Filter out 'Group Notification' users and the selected user if necessary
-    if selected_user != 'Overall':
-        df = df[df['User'] == selected_user]
-    
-    # Create an undirected graph (directed graph if needed)
+# Function to generate the network analysis
+def network_analysis(df):
+    # Create a directed graph
     G = nx.DiGraph()
 
+    # Filter out 'Group Notification' users
+    filtered_df = df[df['User'] != 'Group Notification']
+
     # Loop through the filtered messages and create edges between users
-    for idx in range(1, len(df)):
-        user1 = df['User'].iloc[idx - 1]
-        user2 = df['User'].iloc[idx]
+    for idx in range(1, len(filtered_df)):
+        user1 = filtered_df['User'].iloc[idx-1]
+        user2 = filtered_df['User'].iloc[idx]
         
         # Avoid self-responses (no edge between the same user)
         if user1 != user2:
@@ -329,24 +332,24 @@ def network_analysis(df, selected_user):
     # Get the edge weight for adjusting edge color intensity
     edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
 
-    # Get the color gradient based on user responses (more active users have darker colors)
+    # Get the color gradient for nodes (more active users are green, less active are purple)
     node_color = [user_response_count[user] for user in G.nodes]
     node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
     # Draw the graph with custom settings
-    nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color,
-            cmap=plt.cm.plasma, font_size=12, font_weight='bold',
-            edge_color=edge_weights, width=2, edge_cmap=plt.cm.Purples,  # Change to use Purple-to-Green
-            alpha=0.7, arrows=True, arrowsize=15)
+    edge_colors = [mcolors.to_rgba(plt.cm.brg(weight / max(edge_weights))[:3]) for weight in edge_weights]
+
+    # Draw the graph with varying edge colors based on response frequency
+    nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
+            cmap=plt.cm.plasma, font_size=10, font_weight='bold', 
+            edge_color=edge_colors, width=3, edge_cmap=plt.cm.brg, 
+            alpha=0.7, arrows=True, arrowsize=10)
 
     # Title for the graph
-    plt.title(f'Who Responds to Whom: User Interaction Network ({selected_user})', fontsize=16)
+    plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
 
     # Show the graph
     plt.show()
-
-    # Return the figure object
-    return plt
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
 #         df = df[df['User'] == selecteduser]
