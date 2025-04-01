@@ -252,7 +252,7 @@ def network_analysis(df):
     G = nx.Graph()  # If you want a directed graph, use nx.DiGraph()
 
     # Filter out 'Group Notification' users from the dataframe
-    filtered_df = df[df['User'] != 'Group Notification']
+    filtered_df = df[df['User'] != 'Group Notification' ]
 
     # Loop through the filtered messages and create edges between users
     for idx in range(1, len(filtered_df)):
@@ -277,7 +277,7 @@ def network_analysis(df):
 
     # Get the color gradient based on user responses
     node_color = [user_response_count[user] for user in G.nodes]
-    node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on number of responses
+    node_size = [500 + 10 * user_response_count[user] for user in G.nodes]  # Size of the node based on number of responses
 
     # Draw the graph with custom settings
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
