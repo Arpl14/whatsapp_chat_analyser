@@ -341,11 +341,12 @@ if uploaded_file is not None:
     with col4:
         st.image(wordclouds[3], caption="Topic 4")
 
-    # User Segmentation
-    st.title("User Segmentation")
+
 
     # Add the segmentation plot if the selected user is 'Overall'
     if selected_user == 'Overall':
+        # User Segmentation
+        st.title("User Segmentation")
         # Generate user segmentation plot
         segmentation_fig = stats.user_segmentation(df)
         st.pyplot(segmentation_fig)
