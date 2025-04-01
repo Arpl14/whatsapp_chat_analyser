@@ -167,8 +167,11 @@ def generate_wordcloud(topic_idx, topic, vectorizer):
     # Get the top words for the topic
     topic_words = [vectorizer.get_feature_names_out()[i] for i in topic.argsort()[:-10 - 1:-1]]
     
-    # Remove the word "omitted" from the list if it exists
-    topic_words = [word for word in topic_words if word != 'omitted']
+    # Define a list of patterns to omit (words containing these substrings)
+    omit_patterns = ['image', 'gif', 'sticker', 'video']
+    
+    # Remove words that contain the omit patterns
+    topic_words = [word for word in topic_words if not any(pattern in word.lower() for pattern in omit_patterns)]
     
     # Join the words and create a string for wordcloud
     topic_text = ' '.join(topic_words)
@@ -200,9 +203,6 @@ def generate_topics_and_wordclouds(df, num_topics=4):
         wordclouds.append(wordcloud)
     
     return wordclouds
-
-
-
 
 
 
