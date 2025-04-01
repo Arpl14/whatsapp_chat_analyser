@@ -339,15 +339,15 @@ def network_analysis(df):
 
     # Get the color gradient for nodes (more active users are green, less active are purple)
     node_color = [user_response_count[user] for user in G.nodes]
-    node_size = [500 + 30 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
+    node_size = [500 + 50 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
     # Draw the graph with custom settings
-    edge_colors = [mcolors.to_rgba(plt.cm.cool(weight / max(edge_weights))[:3]) for weight in edge_weights]
+    edge_colors = [mcolors.to_rgba(plt.cm.brg(weight / max(edge_weights))[:3]) for weight in edge_weights]
 
     # Draw the graph with varying edge colors based on response frequency
     nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
             cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
-            edge_color=edge_colors, width=3, edge_cmap=plt.cm.cool, 
+            edge_color=edge_colors, width=3, edge_cmap=plt.cm.brg, 
             alpha=0.6, arrows=True, arrowsize=8)
 
     # Title for the graph
