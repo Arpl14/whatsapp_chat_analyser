@@ -8,3 +8,4 @@ emoji
 textblob
 scikit-learn
 dask
+networkx
