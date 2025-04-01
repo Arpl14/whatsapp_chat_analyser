@@ -138,6 +138,15 @@ if uploaded_file is not None:
 
 
 
+
+    # User Segmentation
+    st.title("User Segmentation")
+
+    # Generate user segmentation plot
+    segmentation_fig = stats.user_segmentation(df)
+    st.pyplot(segmentation_fig)
+
+
     # # Most Common Words
     # st.title("Most Common Words")
     # common_words = stats.getcommonwords(selected_user, df)
