@@ -244,7 +244,6 @@ def user_segmentation(df):
 
 
 
-
 # Function to generate a network graph for the group
 def network_analysis(df):
     # Create an undirected graph
@@ -286,18 +285,26 @@ def network_analysis(df):
 
     # Normalize the node color scale for colorbar
     norm = mcolors.Normalize(vmin=min(node_color), vmax=max(node_color))
-    sm = plt.cm.ScalarMappable(cmap=plt.cm.YlOrRd, norm=norm)
-    sm.set_array([])  # Empty array for the colorbar
+    sm_node = plt.cm.ScalarMappable(cmap=plt.cm.YlOrRd, norm=norm)
+    sm_node.set_array([])  # Empty array for the colorbar
 
     # Add a color bar for the nodes
-    plt.colorbar(sm, label='Node Activity Level')
+    cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
 
-    # Add a custom legend
+    # Add a custom legend for user activity
     legend_elements = [
         Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
         Line2D([0], [0], marker='o', color='w', markerfacecolor='lightgray', markersize=10, label='Less Active User')
     ]
     plt.legend(handles=legend_elements, loc='upper right')
+
+    # Normalize edge color range
+    norm_edge = mcolors.Normalize(vmin=min(edge_weights), vmax=max(edge_weights))
+    sm_edge = plt.cm.ScalarMappable(cmap=plt.cm.Blues, norm=norm_edge)
+    sm_edge.set_array([])
+
+    # Add a color bar for the edges
+    plt.colorbar(sm_edge, ax=plt.gca(), label='Edge Response Frequency')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
@@ -311,7 +318,6 @@ def max_responses_user(df):
     most_active_user = user_response_count.idxmax()
     most_active_user_responses = user_response_count.max()
     return most_active_user, most_active_user_responses
-
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
