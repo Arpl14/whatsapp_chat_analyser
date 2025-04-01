@@ -80,6 +80,41 @@ if uploaded_file is not None:
     # Display the plot in Streamlit
     st.pyplot(fig)
 
+
+
+    # Overall Group Sentiment
+    st.title("Group Sentiment Over Time")
+    sentiment_by_date = stats.group_sentiment(df)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sentiment_by_date.plot(kind='line', ax=ax, title='Group Sentiment Over Time')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Sentiment')
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
+
+    # Individual Sentiment by User
+    st.title("Sentiment by User")
+    sentiment_by_user = stats.sentiment_by_user(df)
+
+    # Create a color map based on sentiment values
+    colors = plt.cm.get_cmap('RdYlGn')  # Red-Yellow-Green color map
+
+    # Normalize sentiment values to range from 0 to 1 for color mapping
+    norm = plt.Normalize(sentiment_by_user.min(), sentiment_by_user.max())
+
+    # Plot sentiment by user with color gradient
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars = sentiment_by_user.plot(kind='bar', color=colors(norm(sentiment_by_user)), ax=ax, title='Sentiment by User')
+
+    # Adding labels
+    ax.set_xlabel('User')
+    ax.set_ylabel('Average Sentiment')
+    plt.xticks(rotation=45)
+
+    # Display the plot in Streamlit
+    st.pyplot(fig)
+
     # # Most Common Words
     # st.title("Most Common Words")
     # common_words = stats.getcommonwords(selected_user, df)
