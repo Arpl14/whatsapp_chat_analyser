@@ -12,6 +12,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+import networkx as nx
+import matplotlib.colors as mcolors
+from matplotlib.lines import Line2D
 
 
 
@@ -235,6 +238,75 @@ def user_segmentation(df):
     plt.colorbar(scatter, label='Cluster')
 
     return fig
+
+
+
+
+
+
+
+# Function to generate a network graph for the group
+def network_analysis(df):
+    # Create an undirected graph
+    G = nx.Graph()
+
+    # Filter out 'Group Notification' users
+    filtered_df = df[df['User'] != 'Group Notification']
+
+    # Loop through the filtered messages and create edges between users
+    for idx in range(1, len(filtered_df)):
+        user1 = filtered_df['User'].iloc[idx-1]
+        user2 = filtered_df['User'].iloc[idx]
+        
+        # Avoid self-responses (no edge between the same user)
+        if user1 != user2:
+            if G.has_edge(user1, user2):
+                G[user1][user2]['weight'] += 1  # Increment edge weight if the edge already exists
+            else:
+                G.add_edge(user1, user2, weight=1)  # Add edge with initial weight
+
+    # Visualize the graph with the required properties
+    plt.figure(figsize=(14, 14))
+
+    # Get the number of responses per user (for node color gradient)
+    user_response_count = {user: G.degree(user) for user in G.nodes}
+
+    # Get the edge weight for adjusting edge color intensity
+    edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
+
+    # Get the color gradient based on user responses (more active users have darker colors)
+    node_color = [user_response_count[user] for user in G.nodes]
+    node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
+
+    # Draw the graph with custom settings
+    node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
+                           cmap=plt.cm.YlOrRd, font_size=12, font_weight='bold', 
+                           edge_color=edge_weights, width=2, edge_cmap=plt.cm.Blues, 
+                           alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
+
+    # Add a color bar for the nodes
+    plt.colorbar(node_scatter, label='Node Activity Level')
+
+    # Add a custom legend
+    legend_elements = [
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor='lightgray', markersize=10, label='Less Active User')
+    ]
+    plt.legend(handles=legend_elements, loc='upper right')
+
+    # Title for the graph
+    plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
+
+    # Return the figure for display
+    return plt
+
+# Function to get the user with the maximum responses
+def max_responses_user(df):
+    user_response_count = df['User'].value_counts()
+    most_active_user = user_response_count.idxmax()
+    most_active_user_responses = user_response_count.max()
+    return most_active_user, most_active_user_responses
+
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
