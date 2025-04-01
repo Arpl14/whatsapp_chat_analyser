@@ -301,8 +301,6 @@ def user_segmentation(df):
 
 
 
-
-
 # Function to generate the network analysis
 def network_analysis(df, selected_user):
     # Check if the selected user is 'Overall'
@@ -361,13 +359,25 @@ def network_analysis(df, selected_user):
     # Add legends below the chart
     fig, ax = plt.subplots(figsize=(10, 2))  # Creating an additional plot for the legend
     ax.set_axis_off()  # Hide axes
-    # Create the legend for the nodes
-    node_legend = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(0), markersize=10, label='Low Activity'),
-                   plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(1), markersize=10, label='High Activity')]
-    # Create the legend for the edges
-    edge_legend = [plt.Line2D([0], [0], color=plt.cm.brg(0), lw=4, label='Low Response'),
-                   plt.Line2D([0], [0], color=plt
 
+    # Create the legend for the nodes
+    node_legend = [
+        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(0), markersize=10, label='Low Activity'),
+        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(1), markersize=10, label='High Activity')
+    ]
+
+    # Create the legend for the edges
+    edge_legend = [
+        plt.Line2D([0], [0], color=plt.cm.brg(0), lw=4, label='Low Response'),
+        plt.Line2D([0], [0], color=plt.cm.brg(1), lw=4, label='High Response')
+    ]
+
+    # Add legends to the plot
+    ax.legend(handles=node_legend, loc='upper left')
+    ax.legend(handles=edge_legend, loc='upper right')
+
+    # Display the legends below the graph
+    plt.show()
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
 #         df = df[df['User'] == selecteduser]
