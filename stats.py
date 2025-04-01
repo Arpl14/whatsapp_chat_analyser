@@ -304,12 +304,12 @@ def user_segmentation(df):
 
 
 
-import networkx as nx
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-
 # Function to generate the network analysis
-def network_analysis(df):
+def network_analysis(df, selected_user):
+    # Check if the selected user is 'Overall'
+    if selected_user != 'Overall':
+        return  # Do not show the network analysis for users other than 'Overall'
+    
     # Create a directed graph
     G = nx.DiGraph()
 
@@ -341,11 +341,14 @@ def network_analysis(df):
     node_color = [user_response_count[user] for user in G.nodes]
     node_size = [500 + 50 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
+    # Shorten node labels to the first two words of the user's name
+    node_labels = {user: ' '.join(user.split()[:2]) for user in G.nodes}
+
     # Draw the graph with custom settings
     edge_colors = [mcolors.to_rgba(plt.cm.brg(weight / max(edge_weights))[:3]) for weight in edge_weights]
 
     # Draw the graph with varying edge colors based on response frequency
-    nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
+    nx.draw(G, with_labels=True, labels=node_labels, node_size=node_size, node_color=node_color, 
             cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
             edge_color=edge_colors, width=3, edge_cmap=plt.cm.brg, 
             alpha=0.6, arrows=True, arrowsize=8)
@@ -356,6 +359,15 @@ def network_analysis(df):
     # Show the graph
     plt.show()
 
+    # Add legends below the chart
+    fig, ax = plt.subplots(figsize=(10, 2))  # Creating an additional plot for the legend
+    ax.set_axis_off()  # Hide axes
+    # Create the legend for the nodes
+    node_legend = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(0), markersize=10, label='Low Activity'),
+                   plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=plt.cm.plasma(1), markersize=10, label='High Activity')]
+    # Create the legend for the edges
+    edge_legend = [plt.Line2D([0], [0], color=plt.cm.brg(0), lw=4, label='Low Response'),
+                   plt.Line2D([0], [0], color=plt
 
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
