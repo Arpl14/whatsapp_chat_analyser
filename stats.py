@@ -149,6 +149,47 @@ def plot_sentiment_by_user(sentiment_by_user):
     plt.tight_layout()  # Adjust the plot to avoid cutoff
     return fig2
 
+
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
+
+# Function to generate word cloud from topic words
+def generate_wordcloud(topic_idx, topic, vectorizer):
+    # Get the top words for the topic
+    topic_words = [vectorizer.get_feature_names_out()[i] for i in topic.argsort()[:-10 - 1:-1]]
+    
+    # Remove the word "omitted" from the list if it exists
+    topic_words = [word for word in topic_words if word != 'omitted']
+    
+    # Join the words and create a string for wordcloud
+    topic_text = ' '.join(topic_words)
+    
+    # Generate word cloud
+    wordcloud = WordCloud(width=800, height=400, background_color='white').generate(topic_text)
+    
+    return wordcloud
+
+# Function to extract topics and generate word clouds
+def generate_topics_and_wordclouds(df, num_topics=4):
+    # Vectorize the messages to a TF-IDF matrix
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(df['Message'])
+    
+    # Apply LDA to extract topics
+    lda = LatentDirichletAllocation(n_components=num_topics, random_state=42)
+    lda.fit(X)
+    
+    # Store the word clouds for each topic
+    wordclouds = []
+    for topic_idx, topic in enumerate(lda.components_):
+        wordcloud = generate_wordcloud(topic_idx, topic, vectorizer)
+        wordclouds.append(wordcloud)
+    
+    return wordclouds
+
+
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
@@ -161,31 +202,4 @@ def plot_sentiment_by_user(sentiment_by_user):
 #     emojidf = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
 #     return emojidf
 
-# # Monthly Timeline
-# def monthtimeline(selecteduser, df):
-#     if selecteduser != 'Overall':
-#         df = df[df['User'] == selecteduser]
 
-#     temp = df.groupby(['Year', 'Month_num', 'Month']).count()['Message'].reset_index()
-#     time = []
-#     for i in range(temp.shape[0]):
-#         time.append(temp['Month'][i]+"-"+str(temp['Year'][i]))
-#     temp['Time'] = time
-#     return temp
-
-# # Most common words
-# def getcommonwords(selecteduser, df):
-#     file = open('stop_hinglish.txt', 'r')
-#     stopwords = file.read().split('\n')
-
-#     if selecteduser != 'Overall':
-#         df = df[df['User'] == selecteduser]
-
-#     words = []
-#     for message in df['Message']:
-#         for word in message.lower().split():
-#             if word not in stopwords:
-#                 words.append(word)
-
-#     mostcommon = pd.DataFrame(Counter(words).most_common(20))
-#     return mostcommon
