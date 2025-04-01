@@ -57,42 +57,52 @@ if uploaded_file is not None:
     st.title("Word Cloud")
     wc_img = stats.createwordcloud(selected_user, df)
     st.image(wc_img, caption='Word Cloud for Messages', use_column_width=True)
+# Message Frequency by Month-Year
+st.title("Message Frequency by Month-Year")
+# Filter the data based on the selected user
+if selected_user != 'Overall':
+    df_filtered = df[df['User'] == selected_user]
+else:
+    df_filtered = df
 
-    # Message Frequency by Month-Year
-    st.title("Message Frequency by Month-Year")
-    message_freq_data, top_5_peaks = stats.message_frequency_by_month(df)
+# Get message frequency and top 5 peaks
+message_freq_data, top_5_peaks = stats.message_frequency_by_month(df_filtered)
 
-    # Plot the message frequency by Month-Year
-    fig, ax = plt.subplots(figsize=(10, 6))
-    message_freq_data.plot(kind='line', ax=ax, title='Message Frequency by Month-Year')
+# Plot the message frequency by Month-Year
+fig, ax = plt.subplots(figsize=(10, 6))
+message_freq_data.plot(kind='line', ax=ax, title='Message Frequency by Month-Year')
 
-    # Add labels for the top 5 peaks
-    for peak in top_5_peaks.index:
-        ax.text(peak, top_5_peaks[peak], str(top_5_peaks[peak]), ha='center', color='red', fontweight='bold')
+# Add labels for the top 5 peaks
+for peak in top_5_peaks.index:
+    ax.text(peak, top_5_peaks[peak], str(top_5_peaks[peak]), ha='center', color='red', fontweight='bold')
 
-    # Customizing the plot
-    ax.set_xlabel('Month-Year')
-    ax.set_ylabel('Message Count')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+# Customizing the plot
+ax.set_xlabel('Month-Year')
+ax.set_ylabel('Message Count')
+plt.xticks(rotation=45)
+plt.tight_layout()
 
-    # Display the plot in Streamlit
-    st.pyplot(fig)
+# Display the plot in Streamlit
+st.pyplot(fig)
 
-    # Sentiment Analysis: Group Sentiment Over Time
-    st.title("Group Sentiment Analysis")
+# Sentiment Analysis: Group Sentiment Over Time
+st.title("Group Sentiment Analysis")
 
-    # Sentiment by date (group sentiment over time)
-    sentiment_by_date = stats.group_sentiment(df)
+# Sentiment by date (group sentiment over time)
+if selected_user != 'Overall':
+    df_filtered = df[df['User'] == selected_user]  # Filter for specific user if not Overall
 
-    # Group Sentiment Over Time Plot
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sentiment_by_date.plot(kind='line', ax=ax, title='Group Sentiment Over Time')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Sentiment')
-    plt.xticks(rotation=45)
+# Group Sentiment Over Time Plot
+sentiment_by_date = stats.group_sentiment(df_filtered)
 
-    # Sentiment by User (bar chart)
+fig, ax = plt.subplots(figsize=(10, 6))
+sentiment_by_date.plot(kind='line', ax=ax, title='Group Sentiment Over Time' if selected_user == 'Overall' else f'{selected_user} Sentiment Over Time')
+ax.set_xlabel('Date')
+ax.set_ylabel('Sentiment')
+plt.xticks(rotation=45)
+
+# Sentiment by User (only for Overall)
+if selected_user == 'Overall':
     sentiment_by_user = stats.sentiment_by_user(df)
 
     # Sentiment by User Horizontal Bar Plot
@@ -100,7 +110,8 @@ if uploaded_file is not None:
     sentiment_by_user.plot(kind='barh', color='skyblue', ax=ax2, title='Sentiment by User')
     ax2.set_xlabel('Average Sentiment')
     ax2.set_ylabel('User')
-    # Arrange the plots side by side using `columns` instead of `beta_columns`
+
+    # Arrange the plots side by side using `columns`
     col1, col2 = st.columns(2)
 
     with col1:
@@ -108,6 +119,8 @@ if uploaded_file is not None:
 
     with col2:
         st.pyplot(fig2)
+else:
+    st.pyplot(fig)  # Just display the sentiment over time graph for specific user
 
 
     # # Most Common Words
