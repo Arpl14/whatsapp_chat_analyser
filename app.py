@@ -132,8 +132,11 @@ if uploaded_file is not None:
     # Generate user segmentation plot
     segmentation_fig = stats.user_segmentation(df)
     st.pyplot(segmentation_fig)
+# In app.py
 
-    if selected_user == 'Overall':
-        # Generate network graph for group
-        network_fig = stats.network_analysis(df)
+     if selected_user == 'Overall':
+    # Generate network graph for group
+        network_fig = stats.network_analysis(df, selected_user)  # Pass selected_user as an argument
         st.pyplot(network_fig)
+
+    
