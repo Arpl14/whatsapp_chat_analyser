@@ -101,6 +101,15 @@ if uploaded_file is not None:
     st.pyplot(fig)
 
 
+    # Add to your existing code where you're processing the file and user selection
+    if selected_user == 'Overall':
+    # Get the most common emojis from the data
+        emoji_df = stats.get_most_common_emojis(df)
+    
+    # Display the top 10 most common emojis in a table
+    st.title("Most Common Emojis")
+    st.dataframe(emoji_df)
+
     
     # Sentiment Analysis: Group Sentiment Over Time
     st.title("Group Sentiment Analysis")
