@@ -243,7 +243,6 @@ def user_segmentation(df):
 
 
 
-
 # Function to generate a network graph for the group
 def network_analysis(df):
     # Create an undirected graph
@@ -277,18 +276,11 @@ def network_analysis(df):
     node_color = [user_response_count[user] for user in G.nodes]
     node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
-    # Draw the graph with custom settings
+    # Draw the graph with custom settings (without legend)
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
-                           cmap='coolwarm', font_size=12, font_weight='bold',  # Change color palette to 'coolwarm'
-                           edge_color=edge_weights, width=3, edge_cmap='coolwarm',  # Change edge color to 'coolwarm'
-                           alpha=0.7, edge_vmin=0, edge_vmax=np.max(edge_weights))  # Ensure max edge weight is used for color normalization
-
-    # Add a custom legend
-    legend_elements = [
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='lightgray', markersize=10, label='Less Active User')
-    ]
-    plt.legend(handles=legend_elements, loc='upper right')
+                           cmap='coolwarm', font_size=12, font_weight='bold',  # Use 'coolwarm' color palette
+                           edge_color=edge_weights, width=3, edge_cmap='coolwarm',  # Arrow edges colored using 'coolwarm'
+                           alpha=0.7, edge_vmin=0, edge_vmax=np.max(edge_weights))  # Color intensity based on edge weights
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
@@ -302,7 +294,6 @@ def max_responses_user(df):
     most_active_user = user_response_count.idxmax()
     most_active_user_responses = user_response_count.max()
     return most_active_user, most_active_user_responses
-
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
