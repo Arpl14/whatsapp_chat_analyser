@@ -19,8 +19,8 @@ if uploaded_file is not None:
     # Preprocess the uploaded WhatsApp chat data
     df = preprocess.preprocess(data)
 
-    # Display the first few rows of the processed DataFrame
-    st.dataframe(df.head())
+    # # Display the first few rows of the processed DataFrame
+    # st.dataframe(df.head())
 
     # Get unique users excluding 'Group Notification'
     user_list = df['User'].unique().tolist()
