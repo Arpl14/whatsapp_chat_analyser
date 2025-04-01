@@ -248,6 +248,23 @@ def user_segmentation(df):
 
 
 
+# Function to get most common emojis
+def get_most_common_emojis(df):
+    # Extract all emojis from the messages
+    emojis = []
+    for message in df['Message']:
+        emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI['en']])
+    
+    # Count the frequency of each emoji
+    emoji_counts = Counter(emojis)
+    
+    # Get the top 10 most common emojis
+    most_common_emojis = emoji_counts.most_common(10)
+    
+    # Create a DataFrame to display the results
+    emoji_df = pd.DataFrame(most_common_emojis, columns=['Emoji', 'Count'])
+    
+    return emoji_df
 
 
 
