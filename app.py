@@ -58,10 +58,27 @@ if uploaded_file is not None:
     # Word Cloud
     st.title("Word Cloud")
     wc_img = stats.createwordcloud(selected_user, df)
-
     # Display the Word Cloud image in Streamlit
     st.image(wc_img, caption='Word Cloud for Messages', use_column_width=True)
 
+
+    
+    # Message Frequency by Month-Year
+    st.title("Message Frequency by Month-Year")
+    message_freq_data, top_5_peaks = stats.message_frequency_by_month(df)
+    # Plot the message frequency by Month-Year
+    fig, ax = plt.subplots(figsize=(10, 6))
+    message_freq_data.plot(kind='line', ax=ax, title='Message Frequency by Month-Year')
+    # Add labels for the top 5 peaks
+    for peak in top_5_peaks.index:
+        ax.text(peak, top_5_peaks[peak], str(top_5_peaks[peak]), ha='center', color='red', fontweight='bold')
+    # Customizing the plot
+    ax.set_xlabel('Month-Year')
+    ax.set_ylabel('Message Count')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    # Display the plot in Streamlit
+    st.pyplot(fig)
 
     # # Most Common Words
     # st.title("Most Common Words")
