@@ -142,7 +142,7 @@ if uploaded_file is not None:
 
     with col1:
         st.image(wordclouds[0], caption="Topic 1")
-
+ 
     with col2:
         st.image(wordclouds[1], caption="Topic 2")
 
