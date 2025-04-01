@@ -242,8 +242,6 @@ def user_segmentation(df):
 
 
 
-
-
 # Function to generate a network graph for the group
 def network_analysis(df):
     # Create an undirected graph
@@ -279,32 +277,9 @@ def network_analysis(df):
 
     # Draw the graph with custom settings
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
-                           cmap=plt.cm.YlOrRd, font_size=12, font_weight='bold', 
-                           edge_color=edge_weights, width=2, edge_cmap=plt.cm.Blues, 
+                           cmap='coolwarm', font_size=12, font_weight='bold',  # Change color palette to 'coolwarm'
+                           edge_color=edge_weights, width=3, edge_cmap='coolwarm',  # Change edge color to 'coolwarm'
                            alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
-
-    # Normalize the node color scale for colorbar
-    norm = mcolors.Normalize(vmin=min(node_color), vmax=max(node_color))
-    sm_node = plt.cm.ScalarMappable(cmap=plt.cm.YlOrRd, norm=norm)
-    sm_node.set_array([])  # Empty array for the colorbar
-
-    # Add a color bar for the nodes
-    cbar_node = plt.colorbar(sm_node, ax=plt.gca(), label='Node Activity Level')
-
-    # Add a custom legend for user activity
-    legend_elements = [
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='yellow', markersize=10, label='Active User'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='lightgray', markersize=10, label='Less Active User')
-    ]
-    plt.legend(handles=legend_elements, loc='upper right')
-
-    # Normalize edge color range
-    norm_edge = mcolors.Normalize(vmin=min(edge_weights), vmax=max(edge_weights))
-    sm_edge = plt.cm.ScalarMappable(cmap=plt.cm.Blues, norm=norm_edge)
-    sm_edge.set_array([])
-
-    # Add a color bar for the edges
-    plt.colorbar(sm_edge, ax=plt.gca(), label='Edge Response Frequency')
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
