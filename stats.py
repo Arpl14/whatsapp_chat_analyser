@@ -334,22 +334,23 @@ def network_analysis(df):
 
     # Get the color gradient for nodes (more active users are green, less active are purple)
     node_color = [user_response_count[user] for user in G.nodes]
-    node_size = [500 + 100 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
+    node_size = [500 + 50 * user_response_count[user] for user in G.nodes]  # Size of the node based on activity level
 
     # Draw the graph with custom settings
     edge_colors = [mcolors.to_rgba(plt.cm.brg(weight / max(edge_weights))[:3]) for weight in edge_weights]
 
     # Draw the graph with varying edge colors based on response frequency
     nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
-            cmap=plt.cm.plasma, font_size=10, font_weight='bold', 
+            cmap=plt.cm.plasma, font_size=12, font_weight='bold', 
             edge_color=edge_colors, width=3, edge_cmap=plt.cm.brg, 
-            alpha=0.7, arrows=True, arrowsize=10)
+            alpha=0.6, arrows=True, arrowsize=8)
 
     # Title for the graph
     plt.title('Who Responds to Whom: User Interaction Network', fontsize=16)
 
     # Show the graph
     plt.show()
+
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
 #         df = df[df['User'] == selecteduser]
