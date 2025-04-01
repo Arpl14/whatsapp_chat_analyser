@@ -132,7 +132,6 @@ if uploaded_file is not None:
     # Generate user segmentation plot
     segmentation_fig = stats.user_segmentation(df)
     st.pyplot(segmentation_fig)
-# In app.py
 
     # Display network analysis graph only for the 'Overall' user
     if selected_user == 'Overall':
@@ -145,4 +144,3 @@ if uploaded_file is not None:
         most_active_user, most_active_user_responses = stats.max_responses_user(df)
         st.write(f"Most active user: {most_active_user} with {most_active_user_responses} responses.")
         st.write("The color of the nodes represents the activity level of each user. Darker colors indicate users with higher activity levels, and the node size is based on the number of messages they sent.")
-    
