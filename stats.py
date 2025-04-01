@@ -271,7 +271,7 @@ def network_analysis(df):
     user_response_count = {user: G.degree(user) for user in G.nodes}
 
     # Get the edge weight for adjusting edge color intensity
-    edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
+    edge_weights = np.array([G[u][v]['weight'] for u, v in G.edges()])  # Ensure edge_weights is a numeric array
 
     # Get the color gradient based on user responses (more active users have darker colors)
     node_color = [user_response_count[user] for user in G.nodes]
@@ -281,7 +281,7 @@ def network_analysis(df):
     node_scatter = nx.draw(G, with_labels=True, node_size=node_size, node_color=node_color, 
                            cmap='coolwarm', font_size=12, font_weight='bold',  # Change color palette to 'coolwarm'
                            edge_color=edge_weights, width=3, edge_cmap='coolwarm',  # Change edge color to 'coolwarm'
-                           alpha=0.7, edge_vmin=0, edge_vmax=max(edge_weights))
+                           alpha=0.7, edge_vmin=0, edge_vmax=np.max(edge_weights))  # Ensure max edge weight is used for color normalization
 
     # Add a custom legend
     legend_elements = [
