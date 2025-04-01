@@ -246,33 +246,33 @@ def user_segmentation(df):
 
 
 
-def get_emojis(text):
-    emoji_pattern = re.compile("[\U0001F600-\U0001F64F\u2700-\u27BF\u24C2-\u1F251\u1F004-\u1F0CF]+", flags=re.UNICODE)
-    return emoji_pattern.findall(text)
+# def get_emojis(text):
+#     emoji_pattern = re.compile("[\U0001F600-\U0001F64F\u2700-\u27BF\u24C2-\u1F251\u1F004-\u1F0CF]+", flags=re.UNICODE)
+#     return emoji_pattern.findall(text)
 
-# Example usage:
-message = "Hello 😊, how are you? 🥳"
-emojis = get_emojis(message)
-print(emojis)  # ['😊', '🥳']
+# # Example usage:
+# message = "Hello 😊, how are you? 🥳"
+# emojis = get_emojis(message)
+# print(emojis)  # ['😊', '🥳']
 
 
-# Function to get most common emojis
-def get_most_common_emojis(df):
-    # Extract all emojis from the messages
-    emojis = []
-    for message in df['Message']:
-        emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI['en']])
+# # Function to get most common emojis
+# def get_most_common_emojis(df):
+#     # Extract all emojis from the messages
+#     emojis = []
+#     for message in df['Message']:
+#         emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI['en']])
     
-    # Count the frequency of each emoji
-    emoji_counts = Counter(emojis)
+#     # Count the frequency of each emoji
+#     emoji_counts = Counter(emojis)
     
-    # Get the top 10 most common emojis
-    most_common_emojis = emoji_counts.most_common(10)
+#     # Get the top 10 most common emojis
+#     most_common_emojis = emoji_counts.most_common(10)
     
-    # Create a DataFrame to display the results
-    emoji_df = pd.DataFrame(most_common_emojis, columns=['Emoji', 'Count'])
+#     # Create a DataFrame to display the results
+#     emoji_df = pd.DataFrame(most_common_emojis, columns=['Emoji', 'Count'])
     
-    return emoji_df
+#     return emoji_df
 
 
 
