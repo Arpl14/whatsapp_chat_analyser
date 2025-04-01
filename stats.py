@@ -299,6 +299,14 @@ def user_segmentation(df):
 #     # Show the graph
 #     plt.show()
 
+
+def max_responses_user(df):
+    user_response_count = df['User'].value_counts()
+    most_active_user = user_response_count.idxmax()
+    most_active_user_responses = user_response_count.max()
+    return most_active_user, most_active_user_responses
+
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
