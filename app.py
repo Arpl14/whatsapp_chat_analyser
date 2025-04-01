@@ -171,4 +171,5 @@ if uploaded_file is not None:
         # Display the user with the maximum responses
         most_active_user, most_active_user_responses = stats.max_responses_user(df)
         st.write(f"Most active user: {most_active_user} with {most_active_user_responses} responses.")
-        st.write("The color of the nodes represents the activity level of each user. Darker colors indicate users with higher activity levels, and the node size is based on the number of messages they sent.")
+        st.write("The color of the nodes represents the activity level of each user. The colour scale for nodes is (blue -> pink -> orange -> yellow), with blue being least responsive and yellow being most responsive. The node size is also based on the number of messages they sent. "
+         "\n\nSimilarly, the arrows denote responsiveness between the two users they connect. The arrow colour scale is (blue -> red -> green), with blue being least responsive and green being most responsive. The arrow direction shows the message direction.")
