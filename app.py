@@ -1,3 +1,9 @@
+import streamlit as st
+import preprocess
+import stats
+import matplotlib.pyplot as plt
+
+
 # Title for the Streamlit app
 st.sidebar.title("WhatsApp Chat Analyzer")
 
