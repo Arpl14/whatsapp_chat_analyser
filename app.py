@@ -111,7 +111,6 @@ if uploaded_file is not None:
 
 
 
-
     # Topic Modeling and Word Clouds
     st.title("Topic Modeling and Word Clouds")
 
@@ -132,7 +131,6 @@ if uploaded_file is not None:
 
     with col4:
         st.image(wordclouds[3], caption="Topic 4")
-
 
 
 
