@@ -302,6 +302,7 @@ def max_responses_user(df):
     most_active_user = user_response_count.idxmax()
     most_active_user_responses = user_response_count.max()
     return most_active_user, most_active_user_responses
+
 # # Emoji statistics
 # def getemojistats(selecteduser, df):
 #     if selecteduser != 'Overall':
