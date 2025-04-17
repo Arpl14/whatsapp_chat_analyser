@@ -4,6 +4,7 @@
 ![Untitled design](https://github.com/user-attachments/assets/0052aeab-b0c5-4ad6-9224-f31bab6725b3)
 
 An interactive web app that performs **data-driven analysis** on exported WhatsApp group chats using **NLP**, **Network Analysis**, **Sentiment analysis** and  **Topic Modeling**. It generates insightful statistics, sentiment trends, activity heatmaps, and network visualizations of group dynamics.
+
 Use the app : https://whatsappchatanalyser-5jh9gvrmmkcmjqkdpbuvql.streamlit.app/
 ---
 
